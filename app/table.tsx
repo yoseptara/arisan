@@ -9,10 +9,8 @@ import {
 } from '@tremor/react';
 
 interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
+  walletAddress: string;
+  telegramUsername: string;
 }
 
 export default async function UsersTable({ users }: { users: User[] }) {
@@ -20,20 +18,16 @@ export default async function UsersTable({ users }: { users: User[] }) {
     <Table>
       <TableHead>
         <TableRow>
-          <TableHeaderCell>Name</TableHeaderCell>
-          <TableHeaderCell>Username</TableHeaderCell>
-          <TableHeaderCell>Email</TableHeaderCell>
+          <TableHeaderCell>Wallet Address</TableHeaderCell>
+          <TableHeaderCell>Telegram Username</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {users.map((user) => (
-          <TableRow key={user.id}>
-            <TableCell>{user.name}</TableCell>
+          <TableRow key={user.walletAddress}>
+            <TableCell>{user.walletAddress}</TableCell>
             <TableCell>
-              <Text>{user.username}</Text>
-            </TableCell>
-            <TableCell>
-              <Text>{user.email}</Text>
+              <Text>{user.telegramUsername}</Text>
             </TableCell>
           </TableRow>
         ))}

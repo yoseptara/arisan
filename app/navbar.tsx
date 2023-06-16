@@ -6,6 +6,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { Web3Button } from '../components/Web3Button';
 
 const navigation = [
   { name: 'Dashboard', href: '/' },
@@ -68,7 +69,8 @@ export default function Navbar({ user }: { user: any }) {
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                <Menu as="div" className="relative ml-3">
+                <Web3Button />
+                {/* <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
@@ -122,7 +124,7 @@ export default function Navbar({ user }: { user: any }) {
                       )}
                     </Menu.Items>
                   </Transition>
-                </Menu>
+                </Menu> */}
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
@@ -137,7 +139,7 @@ export default function Navbar({ user }: { user: any }) {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          {/* <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 pt-2 pb-3">
               {navigation.map((item) => (
                 <Disclosure.Button
@@ -198,7 +200,7 @@ export default function Navbar({ user }: { user: any }) {
                 </div>
               )}
             </div>
-          </Disclosure.Panel>
+          </Disclosure.Panel> */}
         </>
       )}
     </Disclosure>

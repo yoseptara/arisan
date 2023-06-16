@@ -1,0 +1,15 @@
+const NEXT_PUBLIC_RPC_ANKR_URL = process.env.NEXT_PUBLIC_RPC_ANKR_URL;
+if (!NEXT_PUBLIC_RPC_ANKR_URL) {
+  throw new Error('NEXT_PUBLIC_RPC_ANKR_URL undefined');
+}
+
+const NEXT_PUBLIC_MAIN_CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_MAIN_CONTRACT_ADDRESS;
+if (!NEXT_PUBLIC_MAIN_CONTRACT_ADDRESS) {
+  throw new Error('NEXT_PUBLIC_MAIN_CONTRACT_ADDRESS undefined');
+}
+
+export const cfg = {
+  rpcUrl: NEXT_PUBLIC_RPC_ANKR_URL,
+  mainContractAddress: NEXT_PUBLIC_MAIN_CONTRACT_ADDRESS
+};
