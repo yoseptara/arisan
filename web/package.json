@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "concurrently \"next dev\" \"tailwindcss --input ./app/globals.css --output ./app/output.css --watch\"",
-    "install": "cd ../bnb-chain && npm install && cd ../web && npm install",
+    "custom-install": "cd ../bnb-chain && npm install && cd ../web && npm install",
     "build": "cd ../bnb-chain && npx hardhat compile && cd ../web && next build",
     "start": "next start",
     "lint": "next lint"
