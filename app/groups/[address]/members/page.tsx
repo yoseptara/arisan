@@ -2,6 +2,7 @@ import { getGroupContract } from '@root/lib/contracts';
 import { PrimaryLinkBtn } from '@root/components/PrimaryLinkBtn';
 import { ExternalMemberStructOutput } from '@root/../bnb-chain/typechain-types/Group';
 import { Member } from '@root/models/iMember';
+import LeaveGroupBtn from './leave-group-btn';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,13 +36,15 @@ export default async function GroupMembersPage({
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div className="flex">
         <PrimaryLinkBtn text="Beranda" route={`/groups`} className="flex-1" />
-        <div className="mx-4"></div>
+        <div className="mx-2"></div>
         <PrimaryLinkBtn
           text="Detail kelompok"
           route={`/groups/${address}`}
           className="flex-1 w-full"
         />
       </div>
+      <div className="my-4" />
+      <LeaveGroupBtn groupAddress={address} />
       <div className="my-8"></div>
       <p className="text-xl md:text-2xl font-semibold text-gray-800">
         Daftar Anggota ({members.length})

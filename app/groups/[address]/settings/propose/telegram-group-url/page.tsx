@@ -59,7 +59,7 @@ export default function TelegramGroupUrlProposalPage({
       await tx.wait();
 
       Cookies.set('showProposeSuccessToast', 'true');
-      router.push(`/groups/${userWalletAddress}`);
+      router.push(`/groups/${address}`);
 
       // setIsLoading(false);
     } catch (err) {

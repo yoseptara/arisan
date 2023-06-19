@@ -5,6 +5,6 @@ export interface GroupSettings {
   telegramGroupUrl: string;
   coordinator: Member;
   coordinatorRewardPercentage: number;
-  contributionAmountInWei: number;
+  contributionAmountInWei: bigint;
   prizePercentage: number;
 }

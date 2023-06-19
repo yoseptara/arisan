@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-export default function ContributeBtn({
+export default function LeaveGroupBtn({
   groupAddress
 }: {
   groupAddress: string;
@@ -34,19 +34,13 @@ export default function ContributeBtn({
       groupAddress
     );
 
-    if (
-      window.confirm('Konfirmasi untuk mengirim kontribusi pada putaran ini.')
-    ) {
+    if (window.confirm('Konfirmasi untuk keluar kelompok.')) {
       try {
         setIsLoading(true);
-        const contributionAmountInWei =
-          await connectedGroupContract.contributionAmountInWei();
-        const tx = await connectedGroupContract.contribute({
-          value: contributionAmountInWei
-        });
+        const tx = await connectedGroupContract.leave();
         await tx.wait();
-        router.refresh();
-        showSuccessToast('Kontribusi berhasil dikirim');
+        router.replace(`/groups`);
+        showSuccessToast('Anda telah keluar dari kelompok.');
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
@@ -62,7 +56,7 @@ export default function ContributeBtn({
     <>
       <PrimaryBtn
         onClick={onClick}
-        text="Kirim kontribusi"
+        text="Keluar dari kelompok"
         className="w-full"
       />
       <LoadingOverlay isLoading={isLoading} />

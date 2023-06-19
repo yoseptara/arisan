@@ -8,9 +8,8 @@ import './globals.css';
 import '../configuration';
 
 export const metadata = {
-  title: 'Next.js 13 + PlanetScale + NextAuth + Tailwind CSS',
-  description:
-    'A user admin dashboard configured with Next.js, PlanetScale, NextAuth, Tailwind CSS, TypeScript, ESLint, and Prettier.'
+  title: 'Aplikasi Arisan Online Terdesentralisasi',
+  description: 'Aplikasi arisan online yang terintegrasi dengan smart contract'
 };
 
 export default function RootLayout({

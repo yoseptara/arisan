@@ -38,7 +38,7 @@ async function getGroupProposals(address: string): Promise<Proposal[]> {
                 approverPromises.push(
                   groupContract.getApproverByIndexAndProposalIndex(
                     approverIndex,
-                    index
+                    proposal.index
                   )
                 );
               }
@@ -161,7 +161,7 @@ export default async function GroupVotingPage({
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div className="flex">
         <PrimaryLinkBtn text="Beranda" route={`/groups`} className="w-full" />
-        <div className="mx-8"></div>
+        <div className="mx-2"></div>
         <PrimaryLinkBtn
           text="Detail kelompok"
           route={`/groups/${address}`}
@@ -177,34 +177,46 @@ export default async function GroupVotingPage({
       <table className="table-auto w-full">
         <thead>
           <tr>
-            <th rowSpan={2} className="border-2 border-gray-500 px-4 py-2">
+            <th
+              // rowSpan={2}
+              className="border-2 border-gray-500 px-4 py-2"
+            >
               Tanggal Pengusulan
             </th>
-            <th colSpan={2} className="border-2 border-gray-500 px-4 py-2">
+            <th
+              // colSpan={2}
+              className="border-2 border-gray-500 px-4 py-2"
+            >
               Pengusul
             </th>
-            <th rowSpan={2} className="border-2 border-gray-500 px-4 py-2">
+            <th
+              // rowSpan={2}
+              className="border-2 border-gray-500 px-4 py-2"
+            >
               Kategori Usulan
             </th>
-            <th rowSpan={2} className="border-2 border-gray-500 px-4 py-2">
+            <th
+              // rowSpan={2}
+              className="border-2 border-gray-500 px-4 py-2"
+            >
               Nilai
             </th>
             <th
               colSpan={2}
-              rowSpan={2}
+              // rowSpan={2}
               className="border-2 border-gray-500 px-4 py-2"
             >
               Aksi
             </th>
           </tr>
-          <tr>
+          {/* <tr>
             <th className="border-2 border-gray-500 px-4 py-2">
               Wallet Address
             </th>
             <th className="border-2 border-gray-500 px-4 py-2">
               Telegram Username
             </th>
-          </tr>
+          </tr> */}
         </thead>
         <tbody>
           {groupProposals.map((proposal) => {
@@ -221,15 +233,22 @@ export default async function GroupVotingPage({
                   {proposedAt.toLocaleString()}
                 </td>
                 <td className="border-2 border-gray-500 px-4 py-2">
-                  {proposer.walletAddress}
+                  {`${proposer.walletAddress}\nTelegram username: ${
+                    category === ProposalCategory.newMember &&
+                    proposer.walletAddress ===
+                      newMemberProposalValue.memberAddress
+                      ? newMemberProposalValue.telegramUsername
+                      : proposer.telegramUsername
+                  }
+                  `}
                 </td>
-                <td className="border-2 border-gray-500 px-4 py-2">
+                {/* <td className="border-2 border-gray-500 px-4 py-2">
                   {category === ProposalCategory.newMember &&
                   proposer.walletAddress ===
                     newMemberProposalValue.memberAddress
                     ? newMemberProposalValue.telegramUsername
                     : proposer.telegramUsername}
-                </td>
+                </td> */}
                 <td className="border-2 border-gray-500 px-4 py-2">
                   {categoryToText(category)}
                 </td>

@@ -20,7 +20,7 @@ async function getGroupSettings(address: string): Promise<GroupSettings> {
       latestPeriodParticipation: tuple[2][3].toNumber()
     },
     coordinatorRewardPercentage: tuple[3].toNumber(),
-    contributionAmountInWei: tuple[4].toNumber(),
+    contributionAmountInWei: tuple[4].toBigInt(),
     prizePercentage: tuple.prizePercentage.toNumber()
   }));
 }
@@ -36,7 +36,7 @@ export default async function GroupSettingsPage({
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div className="flex">
         <PrimaryLinkBtn text="Beranda" route={`/groups`} className="w-full" />
-        <div className="mx-8"></div>
+        <div className="mx-2"></div>
         <PrimaryLinkBtn
           text="Detail kelompok"
           route={`/groups/${address}`}
@@ -65,8 +65,10 @@ export default async function GroupSettingsPage({
             <td className="border-2 border-gray-500 px-4 py-2">
               {groupSettings.title}
             </td>
-            <td className="border-2 border-gray-500 px-4 py-2">
-              Usulkan perubahan
+            <td className="hover:underline border-2 border-gray-500 px-4 py-2">
+              <Link href={`/groups/${address}/settings/propose/title`}>
+                Usulkan perubahan
+              </Link>
             </td>
           </tr>
           <tr>
@@ -81,8 +83,12 @@ export default async function GroupSettingsPage({
                 {groupSettings.telegramGroupUrl}
               </a>
             </td>
-            <td className="border-2 border-gray-500 px-4 py-2">
-              Usulkan perubahan
+            <td className="hover:underline border-2 border-gray-500 px-4 py-2">
+              <Link
+                href={`/groups/${address}/settings/propose/telegram-group-url`}
+              >
+                Usulkan perubahan
+              </Link>
             </td>
           </tr>
           <tr>
@@ -90,8 +96,10 @@ export default async function GroupSettingsPage({
             <td className="border-2 border-gray-500 px-4 py-2">
               {groupSettings.coordinator.walletAddress}
             </td>
-            <td className="border-2 border-gray-500 px-4 py-2">
-              Usulkan perubahan
+            <td className="hover:underline border-2 border-gray-500 px-4 py-2">
+              <Link href={`/groups/${address}/settings/propose/coordinator`}>
+                Usulkan perubahan
+              </Link>
             </td>
           </tr>
           <tr>
@@ -101,8 +109,12 @@ export default async function GroupSettingsPage({
             <td className="border-2 border-gray-500 px-4 py-2">
               {groupSettings.coordinatorRewardPercentage}
             </td>
-            <td className="border-2 border-gray-500 px-4 py-2">
-              Usulkan perubahan
+            <td className="hover:underline border-2 border-gray-500 px-4 py-2">
+              <Link
+                href={`/groups/${address}/settings/propose/coordinator-reward-percentage`}
+              >
+                Usulkan perubahan
+              </Link>
             </td>
           </tr>
           <tr>
@@ -113,8 +125,12 @@ export default async function GroupSettingsPage({
               {ethers.utils.formatEther(groupSettings.contributionAmountInWei)}{' '}
               BNB
             </td>
-            <td className="border-2 border-gray-500 px-4 py-2">
-              Usulkan perubahan
+            <td className="hover:underline border-2 border-gray-500 px-4 py-2">
+              <Link
+                href={`/groups/${address}/settings/propose/contribution-amount`}
+              >
+                Usulkan perubahan
+              </Link>
             </td>
           </tr>
           <tr>
@@ -124,10 +140,9 @@ export default async function GroupSettingsPage({
             <td className="border-2 border-gray-500 px-4 py-2">
               {groupSettings.prizePercentage}
             </td>
-            <td className="border-2 border-gray-500 px-4 py-2">
+            <td className="hover:underline border-2 border-gray-500 px-4 py-2">
               <Link
-                href={groupSettings.telegramGroupUrl}
-                className="  hover:underline line-clamp-2 cursor-pointer"
+                href={`/groups/${address}/settings/propose/prize-percentage`}
               >
                 Usulkan perubahan
               </Link>

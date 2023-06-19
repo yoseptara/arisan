@@ -6,7 +6,7 @@ const ToastComponent: React.FC = () => {
   return (
     <ToastContainer
       position="top-center"
-      autoClose={5000}
+      autoClose={1500}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick

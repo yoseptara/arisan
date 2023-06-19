@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 async function getPeriodDetail(
   address: string,
-  index: string
+  index: bigint
 ): Promise<Period> {
   const groupContract = getGroupContract(address);
 
@@ -47,14 +47,15 @@ async function getPeriodDetail(
     ]);
 
     return {
+      index: index,
       startedAt: new Date(res.startedAt.toNumber() * 1000),
       endedAt:
         res.endedAt.toNumber() > 0
           ? new Date(res.endedAt.toNumber() * 1000)
           : null,
-      totalContributionInWei: res.totalContributionInWei.toNumber(),
-      contributionAmountInWei: res.contributionAmountInWei.toNumber(),
-      prizeForEachWinnerInWei: res.prizeForEachWinnerInWei.toNumber(),
+      totalContributionInWei: res.totalContributionInWei.toBigInt(),
+      contributionAmountInWei: res.contributionAmountInWei.toBigInt(),
+      prizeForEachWinnerInWei: res.prizeForEachWinnerInWei.toBigInt(),
       rounds: rounds.map((round) => ({
         drawnAt:
           round.drawnAt.toNumber() > 0
@@ -87,19 +88,20 @@ export default async function GroupPeriodDetailPage({
 }: {
   params: { address: string; index: string };
 }) {
-  const period = await getPeriodDetail(address, index);
+  const period = await getPeriodDetail(address, BigInt(index));
 
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <div className="flex">
         <PrimaryLinkBtn text="Beranda" route={`/groups`} className="w-full" />
-        <div className="mx-4"></div>
+        <div className="mx-2"></div>
         <PrimaryLinkBtn
           text="Detail kelompok"
           route={`/groups/${address}`}
           className="w-full"
         />
       </div>
+      <div className="my-2" />
       <div className="flex">
         <ContributeBtn groupAddress={address} />
         <DrawWinnerBtn groupAddress={address} />
@@ -124,7 +126,8 @@ export default async function GroupPeriodDetailPage({
       <div className="my-2"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
         Putaran : Ke-{period.rounds.length} dari{' '}
-        {period.rounds.length + period.dueWinners.length} kontributor
+        {period.rounds.length + period.dueWinners.length} total putaran
+        (dihitung berdasarkan jumlah kontributor)
       </p>
       <div className="my-4"></div>
       <table className="table-auto w-full">
@@ -163,7 +166,7 @@ export default async function GroupPeriodDetailPage({
                     {round.winner.telegramUsername}
                   </td>
                   <td className="border-2 border-gray-500 px-4 py-2">
-                    {index} ({round.drawnAt.toLocaleString()})
+                    Ke-{index + 1} ({round.drawnAt.toLocaleString()})
                   </td>
                   <td className="border-2 border-gray-500 px-4 py-2">
                     {ethers.utils.formatEther(period.prizeForEachWinnerInWei)}{' '}

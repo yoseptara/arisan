@@ -6,7 +6,12 @@ interface ConnectProps {
 }
 const ConnectButton = ({ connect }: ConnectProps) => {
   return connect ? (
-    <button onClick={connect}>Connect</button>
+    <button
+      className="px-3 py-1 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+      onClick={connect}
+    >
+      Connect
+    </button>
   ) : (
     <button>Loading...</button>
   );
@@ -18,7 +23,12 @@ interface DisconnectProps {
 
 const DisconnectButton = ({ disconnect }: DisconnectProps) => {
   return disconnect ? (
-    <button onClick={disconnect}>Disconnect</button>
+    <button
+      className="px-3 py-1 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+      onClick={disconnect}
+    >
+      Disconnect
+    </button>
   ) : (
     <button>Loading...</button>
   );

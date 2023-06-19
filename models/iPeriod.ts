@@ -1,11 +1,12 @@
 import { Member } from './iMember';
 
 interface Period {
+  index: bigint;
   startedAt: Date;
   endedAt: Date | null;
-  totalContributionInWei: number;
-  contributionAmountInWei: number;
-  prizeForEachWinnerInWei: number;
+  totalContributionInWei: bigint;
+  contributionAmountInWei: bigint;
+  prizeForEachWinnerInWei: bigint;
   rounds: Round[];
   dueWinners: Member[];
 }

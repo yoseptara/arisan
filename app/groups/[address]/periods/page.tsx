@@ -9,24 +9,23 @@ import {
 } from '@root/../bnb-chain/typechain-types/Group';
 import { Period } from '@root/models/iPeriod';
 import StartPeriodBtn from './start-period-btn';
+import { BigNumber } from 'ethers';
 
 export const dynamic = 'force-dynamic';
 
 async function getPageData(
   address: string
-): Promise<[balance: string, periods: Period[]]> {
+): Promise<[balance: BigNumber, periods: Period[]]> {
   const groupContract = getGroupContract(address);
 
   return Promise.all([
-    staticRpcProvider
-      .getBalance(address)
-      .then((groupBalanceInWei) => ethers.utils.formatEther(groupBalanceInWei)),
+    staticRpcProvider.getBalance(address),
     groupContract.getPeriodsCount().then(async (periodsCountBigNum) => {
-      const periodsCount = periodsCountBigNum.toNumber();
+      const periodsCount = periodsCountBigNum.toBigInt();
 
       const periodPromises: Promise<Period>[] = [];
 
-      for (let i = periodsCount - 1; i >= 0; i--) {
+      for (let i = periodsCount - BigInt(1); i >= BigInt(0); i--) {
         periodPromises.push(
           groupContract.getPeriodByIndex(i).then(async (period) => {
             const roundsCount = period.roundsCount.toNumber();
@@ -62,16 +61,17 @@ async function getPageData(
             ]);
 
             return {
+              index: i,
               startedAt: new Date(period.startedAt.toNumber() * 1000),
               endedAt:
                 period.endedAt.toNumber() > 0
                   ? new Date(period.endedAt.toNumber() * 1000)
                   : null,
-              totalContributionInWei: period.totalContributionInWei.toNumber(),
+              totalContributionInWei: period.totalContributionInWei.toBigInt(),
               contributionAmountInWei:
-                period.contributionAmountInWei.toNumber(),
+                period.contributionAmountInWei.toBigInt(),
               prizeForEachWinnerInWei:
-                period.prizeForEachWinnerInWei.toNumber(),
+                period.prizeForEachWinnerInWei.toBigInt(),
               rounds: rounds.map((round) => ({
                 drawnAt: new Date(round.drawnAt.toNumber() * 1000),
                 winner: {
@@ -123,17 +123,33 @@ export default async function GroupPeriodsPage({
         <StartPeriodBtn groupAddress={address} />
       </div>
       <div className="my-8"></div>
-      <p className="text-xl md:text-2xl font-semibold text-gray-800">
-        Total Saldo Kelompok : {balance} BNB
-      </p>
+      <div className="flex">
+        <p className="text-xl md:text-2xl font-semibold text-gray-800">
+          Total Saldo Kelompok : {ethers.utils.formatEther(balance)} BNB
+        </p>
+        {/* {balance.toBigInt() > BigInt(0) && periods.length > 0 ? ( */}
+        {true ? (
+          <>
+            <div className="mx-2" />
+
+            <PrimaryLinkBtn
+              text="Usulkan kirim saldo"
+              route={`/groups/${address}/periods/transfer`}
+            />
+          </>
+        ) : null}
+      </div>
       <div className="my-8"></div>
       <table className="table-auto w-full">
         <thead>
           <tr>
+            <th className="border-2 border-gray-500 px-4 py-2">No</th>
             <th className="border-2 border-gray-500 px-4 py-2">
               Rentang Waktu
             </th>
-            <th className="border-2 border-gray-500 px-4 py-2">Total Dana</th>
+            <th className="border-2 border-gray-500 px-4 py-2">
+              Total Dana Sisa
+            </th>
             <th className="border-2 border-gray-500 px-4 py-2">
               Jumlah Kontribusi per Orang
             </th>
@@ -145,9 +161,12 @@ export default async function GroupPeriodsPage({
           </tr>
         </thead>
         <tbody>
-          {periods.map((period, index) => {
+          {periods.map((period) => {
             return (
-              <tr key={index}>
+              <tr key={period.index.toString()}>
+                <td className="border-2 border-gray-500 px-4 py-2">
+                  {(period.index + BigInt(0)).toString()}
+                </td>
                 <td className="border-2 border-gray-500 px-4 py-2">
                   {period.startedAt.toLocaleString()} -{' '}
                   {period.endedAt
@@ -164,7 +183,7 @@ export default async function GroupPeriodsPage({
                   {ethers.utils.formatEther(period.prizeForEachWinnerInWei)} BNB
                 </td>
                 <td className="hover:underline border-2 border-gray-500 px-4 py-2">
-                  <Link href={`/groups/${address}/periods/${index}`}>
+                  <Link href={`/groups/${address}/periods/${period.index}`}>
                     Lihat Detail
                   </Link>
                 </td>

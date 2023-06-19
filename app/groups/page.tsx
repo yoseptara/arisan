@@ -4,6 +4,7 @@ import { PrimaryBtn } from '../../components/PrimaryButton';
 import Link from 'next/link';
 import OnPageInitSuccessToast from './create-group-success-toast';
 import GroupsCardsGrid from '@root/components/GroupsCardsGrid';
+import { PrimaryLinkBtn } from '@root/components/PrimaryLinkBtn';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,17 +29,21 @@ export default async function GroupsPage() {
 
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
-      <div className="flex justify-center items-stretch">
+      {/* <div className="flex justify-center items-stretch">
         <Search />
         <div className="mx-4"></div>
         <Link href="/groups/create">
           <PrimaryBtn text="Buat kelompok baru" className="h-full" />
         </Link>
       </div>
-      <div className="my-8"></div>
-      <Title className="text-xl md:text-2xl font-semibold text-gray-800">
-        Daftar Kelompok Arisan
-      </Title>
+      <div className="my-8"></div> */}
+      <div className="flex">
+        <Title className="text-xl md:text-2xl font-semibold text-gray-800">
+          Daftar Kelompok Arisan
+        </Title>
+        <div className="mx-2" />
+        <PrimaryLinkBtn text="Buat kelompok baru" route={`/groups/create`} />
+      </div>
       <div className="my-8"></div>
       <GroupsCardsGrid />
       {/* {groups.length === 0 ? (

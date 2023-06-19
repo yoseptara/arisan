@@ -12,8 +12,9 @@ import { getConnectedGroupContract } from '@root/lib/contracts';
 import { useWeb3Context } from '@root/contexts';
 import LoadingOverlay from '@root/components/LoadingOverlay';
 import Cookies from 'js-cookie';
+import { ProposalCategory } from '@root/models/iGroupProposals';
 
-export default function CoordinatorRewardPercentageProposalPage({
+export default function TransferProposalPage({
   params: { address }
 }: {
   params: { address: string };
@@ -21,8 +22,9 @@ export default function CoordinatorRewardPercentageProposalPage({
   const { web3Provider, address: userWalletAddress } = useWeb3Context();
   const router = useRouter();
 
-  const [coordinatorRewardPercentage, setCoordinatorRewardPercentage] =
-    useState<number>(0);
+  const [recipientAddress, setRecipientAddress] = useState<string>('');
+  const [transferAmountInBNB, setTransferAmountInBNB] = useState<number>(0);
+  const [transferAmountInputError, setTransferAmountInputError] = useState('');
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -40,7 +42,7 @@ export default function CoordinatorRewardPercentageProposalPage({
 
     // Do something with the form values, e.g. send to an API or display them
     console.log({
-      coordinatorRewardPercentage
+      recipientAddress
     });
 
     setIsLoading(true);
@@ -51,10 +53,10 @@ export default function CoordinatorRewardPercentageProposalPage({
         web3Provider.getSigner(),
         address
       );
-      const tx =
-        await connectedGroupContract.proposeNewCoordinatorRewardPercentage(
-          coordinatorRewardPercentage
-        );
+      const tx = await connectedGroupContract.proposeTransfer(
+        recipientAddress,
+        ethers.utils.parseEther(transferAmountInBNB.toString())
+      );
 
       await tx.wait();
 
@@ -81,29 +83,64 @@ export default function CoordinatorRewardPercentageProposalPage({
         <div className="mb-6">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="coordinatorRewardPercentage"
+            htmlFor="recipientAddress"
           >
-            Persentase Keuntungan Koordinator
+            Wallet Address yang Dituju
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            id="coordinatorRewardPercentage"
-            type="number"
+            id="recipientAddress"
+            type="text"
+            placeholder="Masukkan wallet address atau alamat dompet yang dituju..."
+            minLength={5}
+            required={true}
+            onChange={(event) => setRecipientAddress(event.target.value)}
+          />
+        </div>
+        <div className="mb-6">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="transferAmountInBNB"
+          >
+            Jumlah Saldo yang Dikirim dalam BNB
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            id="transferAmountInBNB"
+            type="text"
             max={100}
             min={0}
             required={true}
-            placeholder="Masukkan jumlah baru yang diusulkan..."
-            onChange={(event) =>
-              setCoordinatorRewardPercentage(parseInt(event.target.value))
-            }
+            placeholder="Masukkan jumlah saldo yang dikirim dalam BNB"
+            pattern="^\d*([.,])?\d{0,18}$"
+            onChange={(event) => {
+              const value = event.target.value;
+              const numberValue = parseFloat(value.replace(',', '.'));
+
+              if (
+                /^\d*([.,])?\d{0,18}$/.test(value) &&
+                !isNaN(numberValue) &&
+                numberValue >= 0
+              ) {
+                setTransferAmountInBNB(numberValue);
+                setTransferAmountInputError(''); // Clear error
+              } else {
+                setTransferAmountInputError(
+                  'Tolong masukkan jumlah yang benar.'
+                );
+              }
+            }}
           />
+          {transferAmountInputError && (
+            <div className="text-red-500">{transferAmountInputError}</div>
+          )}
         </div>
         <div className="flex items-center justify-between">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Usulkan perubahan
+            Usulkan pengiriman saldo
           </button>
         </div>
       </form>

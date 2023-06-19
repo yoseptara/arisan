@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router'; // <-- Correct import for useRouter
+'use client';
+
+import React, { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   EthersError,
   getParsedEthersError
@@ -17,6 +19,8 @@ function DrawWinnerBtn({ groupAddress }: { groupAddress: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { web3Provider, address } = useWeb3Context();
   const [isCoordinator, setIsCoordinator] = useState<boolean>(false);
+
+  const isEventListenerAttached = useRef(false);
 
   const onClick = async () => {
     if (!web3Provider) {
@@ -48,6 +52,8 @@ function DrawWinnerBtn({ groupAddress }: { groupAddress: string }) {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
     const isCurrUserCoordinator = async () => {
       if (!address || !web3Provider) {
         return;
@@ -64,17 +70,32 @@ function DrawWinnerBtn({ groupAddress }: { groupAddress: string }) {
         ethers.utils.getAddress(address) ===
         ethers.utils.getAddress(coordinatorAddress)
       ) {
-        setIsCoordinator(true);
+        if (isMounted) {
+          setIsCoordinator(true);
+        }
 
-        connectedGroupContract.on('WinnerDrawn', (winner) => {
-          router.reload(); // <-- reload() is the method to refresh the page
-          showSuccessToast(
-            `Undian putaran ini dimenangkan oleh ${winner.telegramUsername} (${winner.walletAddress})`
-          );
-        });
+        if (!isEventListenerAttached.current) {
+          connectedGroupContract.on('WinnerDrawn', (winner) => {
+            if (isMounted) {
+              router.refresh();
+              showSuccessToast(
+                `Undian putaran ini dimenangkan oleh ${winner.telegramUsername} (${winner.walletAddress})`
+              );
+              setIsLoading(false);
+            }
+          });
+
+          isEventListenerAttached.current = true;
+        }
       }
     };
+
     isCurrUserCoordinator();
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+    };
   }, [web3Provider, address]);
 
   if (!isCoordinator) {
@@ -86,7 +107,7 @@ function DrawWinnerBtn({ groupAddress }: { groupAddress: string }) {
       <PrimaryBtn
         onClick={onClick}
         text="Undi pemenang"
-        className="ml-4 flex justify-center"
+        className="ml-4 w-full"
       />
       <LoadingOverlay isLoading={isLoading} />
     </>

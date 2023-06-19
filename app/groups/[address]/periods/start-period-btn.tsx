@@ -10,8 +10,9 @@ import { useWeb3Context } from '@root/contexts';
 import { getConnectedGroupContract } from '@root/lib/contracts';
 import { showSuccessToast } from '@root/utils/toastUtils';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { ethers } from 'ethers';
 
 export default function StartPeriodBtn({
   groupAddress
@@ -20,7 +21,8 @@ export default function StartPeriodBtn({
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { web3Provider } = useWeb3Context();
+  const { web3Provider, address } = useWeb3Context();
+  const [isCoordinator, setIsCoordinator] = useState<boolean>(false);
 
   const onClick = async () => {
     if (!web3Provider) {
@@ -45,6 +47,7 @@ export default function StartPeriodBtn({
         await tx.wait();
         router.refresh();
         showSuccessToast('Periode baru telah dimulai');
+        setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
         const parsedEthersError = getParsedEthersError(err as EthersError);
@@ -54,6 +57,33 @@ export default function StartPeriodBtn({
       }
     }
   };
+
+  useEffect(() => {
+    const isCurrUserCoordinator = async () => {
+      if (!address || !web3Provider) {
+        return;
+      }
+
+      const signer = web3Provider.getSigner();
+      const connectedGroupContract = getConnectedGroupContract(
+        signer,
+        groupAddress
+      );
+
+      const coordinatorAddress = await connectedGroupContract.coordinator();
+      if (
+        ethers.utils.getAddress(address) ===
+        ethers.utils.getAddress(coordinatorAddress)
+      ) {
+        setIsCoordinator(true);
+      }
+    };
+    isCurrUserCoordinator();
+  }, [web3Provider, address]);
+
+  if (!isCoordinator) {
+    return <div />;
+  }
 
   return (
     <>

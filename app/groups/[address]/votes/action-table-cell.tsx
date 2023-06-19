@@ -97,6 +97,7 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
         showSuccessToast('Proposal berhasil disetujui');
         // window.location.reload();
         router.refresh();
+        setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
         const parsedEthersError = getParsedEthersError(err as EthersError);
@@ -124,6 +125,8 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
       }
     }
   };
+
+  // console.log('cek approvers : ', proposal.approvers);
 
   if (
     proposal.approvers.some((approver) => approver.walletAddress === address)
