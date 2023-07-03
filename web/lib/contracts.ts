@@ -11,7 +11,7 @@ import {
   ArisanGroupFactory__factory,
   Group,
   Group__factory
-} from '@root/typechain-types';
+} from '../typechain-types';
 import staticRpcProvider from './web3';
 
 // export function getGroup(web3: Web3, address: string): Group {
