@@ -151,7 +151,7 @@ export default async function GroupPeriodsPage({
               Total Dana Sisa
             </th>
             <th className="border-2 border-gray-500 px-4 py-2">
-              Jumlah Kontribusi per Orang
+              Jumlah Syarat Kontribusi
             </th>
 
             <th className="border-2 border-gray-500 px-4 py-2">

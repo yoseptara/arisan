@@ -119,7 +119,7 @@ export default async function GroupSettingsPage({
           </tr>
           <tr>
             <td className="border-2 border-gray-500 px-4 py-2">
-              Jumlah kontribusi setiap peserta
+              Jumlah syarat kontribusi
             </td>
             <td className="border-2 border-gray-500 px-4 py-2">
               {ethers.utils.formatEther(groupSettings.contributionAmountInWei)}{' '}

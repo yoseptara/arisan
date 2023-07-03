@@ -180,7 +180,7 @@ export default function CreateGroupPage() {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="contributionAmountInBNB"
           >
-            Jumlah Kontribusi Setiap Periode dalam BNB
+            Jumlah Syarat Kontribusi dalam BNB
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -189,7 +189,7 @@ export default function CreateGroupPage() {
             max={100}
             min={0}
             required={true}
-            placeholder="Masukkan jumlah kontribusi minimal untuk setiap anggota pada periode arisan..."
+            placeholder="Masukkan jumlah syarat kontribusi untuk setiap anggota pada periode arisan..."
             pattern="^\d*([.,])?\d{0,18}$"
             onChange={(event) => {
               const value = event.target.value;
