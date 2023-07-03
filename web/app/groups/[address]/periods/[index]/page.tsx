@@ -126,8 +126,9 @@ export default async function GroupPeriodDetailPage({
       <div className="my-2"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
         Putaran : Ke-{period.rounds.length} dari{' '}
-        {period.rounds.length + period.dueWinners.length} total putaran
-        (dihitung berdasarkan jumlah kontributor)
+        {period.rounds.filter((round) => round.drawnAt).length +
+          period.dueWinners.length}{' '}
+        total putaran (dihitung berdasarkan jumlah kontributor)
       </p>
       <div className="my-4"></div>
       <table className="table-auto w-full">
