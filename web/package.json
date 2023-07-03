@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"next dev\" \"tailwindcss --input ./app/globals.css --output ./app/output.css --watch\"",
     "custom-install": "cd ../bnb-chain && npm install && cd ../web && npm install",
-    "build": "cd ../bnb-chain && npx hardhat clean && npx hardhat compile && cd ../web && next build",
+    "build": "cd ../bnb-chain && npx hardhat compile && cd ../web && next build",
     "start": "next start",
     "lint": "next lint"
   },
