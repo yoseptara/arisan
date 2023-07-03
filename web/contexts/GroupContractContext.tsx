@@ -4,7 +4,7 @@ import React, { createContext, useContext } from 'react';
 import { useWeb3 } from '../hooks/Web3Client';
 import { Web3ProviderState, web3InitialState } from '../reducers';
 import { getConnectedGroupContract, getGroupContract } from '../lib/contracts';
-import { Group } from '../../bnb-chain/typechain-types';
+import { Group } from '@root/typechain-types';
 
 const GroupContractContext = createContext<Group | undefined>(undefined);
 

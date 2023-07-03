@@ -11,9 +11,7 @@ import {
   ArisanGroupFactory__factory,
   Group,
   Group__factory
-} from '../../bnb-chain/typechain-types';
-import { Provider } from '@ethersproject/providers';
-import { cfg } from '../configuration';
+} from '@root/typechain-types';
 import staticRpcProvider from './web3';
 
 // export function getGroup(web3: Web3, address: string): Group {

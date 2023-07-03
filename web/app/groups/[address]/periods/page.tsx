@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {
   ExternalMemberStructOutput,
   ExternalRoundStructOutput
-} from '@root/../bnb-chain/typechain-types/Group';
+} from '@root/typechain-types';
 import { Period } from '@root/models/iPeriod';
 import StartPeriodBtn from './start-period-btn';
 import { BigNumber } from 'ethers';
