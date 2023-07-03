@@ -8,6 +8,7 @@ import {
 import { Period } from '@root/models/iPeriod';
 import ContributeBtn from './contribute-btn';
 import DrawWinnerBtn from './draw-winner-btn';
+import ClientDateLocaleString from '@root/components/ClientDateLocaleString';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,19 +49,13 @@ async function getPeriodDetail(
 
     return {
       index: index,
-      startedAt: new Date(res.startedAt.toNumber() * 1000),
-      endedAt:
-        res.endedAt.toNumber() > 0
-          ? new Date(res.endedAt.toNumber() * 1000)
-          : null,
+      startedAtTimestamp: res.startedAt.toNumber() * 1000,
+      endedAtTimestamp: res.endedAt.toNumber() * 1000,
       totalContributionInWei: res.totalContributionInWei.toBigInt(),
       contributionAmountInWei: res.contributionAmountInWei.toBigInt(),
       prizeForEachWinnerInWei: res.prizeForEachWinnerInWei.toBigInt(),
       rounds: rounds.map((round) => ({
-        drawnAt:
-          round.drawnAt.toNumber() > 0
-            ? new Date(round.drawnAt.toNumber() * 1000)
-            : null,
+        drawnAtTimestamp: round.drawnAt.toNumber() * 1000,
         winner: round.winner
           ? {
               walletAddress: round.winner.walletAddress,
@@ -108,9 +103,12 @@ export default async function GroupPeriodDetailPage({
       </div>
       <div className="my-8"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
-        Rentang Waktu : {period.startedAt.toLocaleString()} -{' '}
-        {period.endedAt
-          ? `${period.endedAt.toLocaleString()}`
+        Rentang Waktu :{' '}
+        {<ClientDateLocaleString timestamp={period.startedAtTimestamp} />} -{' '}
+        {period.endedAtTimestamp > 0
+          ? `${(
+              <ClientDateLocaleString timestamp={period.endedAtTimestamp} />
+            )}`
           : `Belum berakhir`}
       </p>
       <div className="my-2"></div>
@@ -126,7 +124,7 @@ export default async function GroupPeriodDetailPage({
       <div className="my-2"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
         Putaran : Ke-{period.rounds.length} dari{' '}
-        {period.rounds.filter((round) => round.drawnAt).length +
+        {period.rounds.filter((round) => round.drawnAtTimestamp).length +
           period.dueWinners.length}{' '}
         total putaran (dihitung berdasarkan jumlah kontributor)
       </p>
@@ -156,7 +154,7 @@ export default async function GroupPeriodDetailPage({
             if (
               round.winner?.walletAddress &&
               round.winner.telegramUsername &&
-              round.drawnAt
+              round.drawnAtTimestamp > 0
             ) {
               return (
                 <tr key={index}>
@@ -167,7 +165,13 @@ export default async function GroupPeriodDetailPage({
                     {round.winner.telegramUsername}
                   </td>
                   <td className="border-2 border-gray-500 px-4 py-2">
-                    Ke-{index + 1} ({round.drawnAt.toLocaleString()})
+                    Ke-{index + 1} (
+                    {
+                      <ClientDateLocaleString
+                        timestamp={round.drawnAtTimestamp}
+                      />
+                    }
+                    )
                   </td>
                   <td className="border-2 border-gray-500 px-4 py-2">
                     {ethers.utils.formatEther(period.prizeForEachWinnerInWei)}{' '}

@@ -8,6 +8,7 @@ import {
 } from '@root/../bnb-chain/typechain-types/Group';
 import ActionTableCell from './action-table-cell';
 import { Proposal, ProposalCategory } from '@root/models/iGroupProposals';
+import ClientDateLocaleString from '@root/components/ClientDateLocaleString';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,7 +48,7 @@ async function getGroupProposals(address: string): Promise<Proposal[]> {
               return {
                 index: proposal.index.toNumber(),
                 category: proposal.category,
-                proposedAt: new Date(proposal.proposedAt.toNumber() * 1000),
+                proposedAtTimestamp: proposal.proposedAt.toNumber() * 1000,
                 proposer: {
                   walletAddress: proposal.proposer.walletAddress,
                   telegramUsername: proposal.proposer.telegramUsername,
@@ -55,7 +56,7 @@ async function getGroupProposals(address: string): Promise<Proposal[]> {
                   latestPeriodParticipation:
                     proposal.proposer.latestPeriodParticipation.toNumber()
                 },
-                completedAt: new Date(proposal.completedAt.toNumber() * 1000),
+                completedAtTimestamp: proposal.completedAt.toNumber() * 1000,
                 isApproved: proposal.isApproved,
                 approvers: approvers.map((approver) => ({
                   walletAddress: approver.walletAddress,
@@ -220,8 +221,12 @@ export default async function GroupVotingPage({
         </thead>
         <tbody>
           {groupProposals.map((proposal) => {
-            const { category, proposedAt, proposer, newMemberProposalValue } =
-              proposal;
+            const {
+              category,
+              proposedAtTimestamp,
+              proposer,
+              newMemberProposalValue
+            } = proposal;
 
             if (!getNewValueBasedOnCategory(proposal)) {
               return null;
@@ -230,7 +235,7 @@ export default async function GroupVotingPage({
             return (
               <tr key={proposal.index}>
                 <td className="border-2 border-gray-500 px-4 py-2">
-                  {proposedAt.toLocaleString()}
+                  {<ClientDateLocaleString timestamp={proposedAtTimestamp} />}
                 </td>
                 <td className="border-2 border-gray-500 px-4 py-2">
                   {`${proposer.walletAddress}\nTelegram username: ${

@@ -10,6 +10,7 @@ import {
 import { Period } from '@root/models/iPeriod';
 import StartPeriodBtn from './start-period-btn';
 import { BigNumber } from 'ethers';
+import ClientDateLocaleString from '@root/components/ClientDateLocaleString';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,18 +63,15 @@ async function getPageData(
 
             return {
               index: i,
-              startedAt: new Date(period.startedAt.toNumber() * 1000),
-              endedAt:
-                period.endedAt.toNumber() > 0
-                  ? new Date(period.endedAt.toNumber() * 1000)
-                  : null,
+              startedAtTimestamp: period.startedAt.toNumber() * 1000,
+              endedAtTimestamp: period.endedAt.toNumber() * 1000,
               totalContributionInWei: period.totalContributionInWei.toBigInt(),
               contributionAmountInWei:
                 period.contributionAmountInWei.toBigInt(),
               prizeForEachWinnerInWei:
                 period.prizeForEachWinnerInWei.toBigInt(),
               rounds: rounds.map((round) => ({
-                drawnAt: new Date(round.drawnAt.toNumber() * 1000),
+                drawnAtTimestamp: round.drawnAt.toNumber() * 1000,
                 winner: {
                   walletAddress: round.winner.walletAddress,
                   telegramUsername: round.winner.telegramUsername,
@@ -168,9 +166,18 @@ export default async function GroupPeriodsPage({
                   {(period.index + BigInt(0)).toString()}
                 </td>
                 <td className="border-2 border-gray-500 px-4 py-2">
-                  {period.startedAt.toLocaleString()} -{' '}
-                  {period.endedAt
-                    ? `${period.endedAt.toLocaleString()}`
+                  {
+                    <ClientDateLocaleString
+                      timestamp={period.startedAtTimestamp}
+                    />
+                  }{' '}
+                  -{' '}
+                  {period.endedAtTimestamp > 0
+                    ? `${(
+                        <ClientDateLocaleString
+                          timestamp={period.endedAtTimestamp}
+                        />
+                      )}`
                     : `Belum berakhir`}
                 </td>
                 <td className="border-2 border-gray-500 px-4 py-2">

@@ -19,9 +19,9 @@ enum ProposalCategory {
 interface Proposal {
   index: number;
   category: ProposalCategory;
-  proposedAt: Date;
+  proposedAtTimestamp: number;
   proposer: Member;
-  completedAt: Date;
+  completedAtTimestamp: number;
   isApproved: boolean;
   approvers: Member[];
   stringProposalValue: string;

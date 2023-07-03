@@ -2,8 +2,8 @@ import { Member } from './iMember';
 
 interface Period {
   index: bigint;
-  startedAt: Date;
-  endedAt: Date | null;
+  startedAtTimestamp: number;
+  endedAtTimestamp: number;
   totalContributionInWei: bigint;
   contributionAmountInWei: bigint;
   prizeForEachWinnerInWei: bigint;
@@ -12,7 +12,7 @@ interface Period {
 }
 
 interface Round {
-  drawnAt: Date | null;
+  drawnAtTimestamp: number;
   winner: Member | null;
   contributorCount: number;
 }
