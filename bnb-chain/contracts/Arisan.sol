@@ -635,40 +635,49 @@ contract Group {
         return false;
     }
 
-    function rejectProposal(
+    function _rejectProposal(
         uint index
-    ) external activeVoterOnly votableProposalOnly(index) {
+    ) private activeVoterOnly votableProposalOnly(index) {
         Proposal storage proposal = proposals[index];
         proposalsApprovals[index][msg.sender] = ApprovalStatus.rejected;
         proposal.completedAt = block.timestamp;
+        incompleteProposalIndexes.remove(index);
     }
 
     function proposeNewString(
         string calldata newValue,
         ProposalCategory category
     ) external activeVoterOnly {
+        require(
+            category == ProposalCategory.title ||
+                category == ProposalCategory.telegramGroupUrl,
+            "Kategori usulan bukan judul / url grup telegram"
+        );
+
         _propose(category);
 
         stringProposalValues[proposals.length - 1] = newValue;
     }
 
-    function proposeNewContributionAmountInWei(
-        uint newContributionAmountInWei
-    ) external activeVoterOnly {
-        require(
-            newContributionAmountInWei > 0,
-            "Jumlah kontribusi tidak boleh 0"
-        );
-        _propose(ProposalCategory.contributionAmount);
+    // function proposeNewTitle(
+    //     string calldata newTitle
+    // ) external activeVoterOnly {
+    //     _propose(ProposalCategory.title);
+    //     stringProposalValues[proposals.length - 1] = newTitle;
+    // }
 
-        uintProposalValues[proposals.length - 1] = newContributionAmountInWei;
-    }
+    // function proposeNewTelegramGroupUrl(
+    //     string calldata newTelegramGroupUrl
+    // ) external activeVoterOnly {
+    //     _propose(ProposalCategory.telegramGroupUrl);
+    //     stringProposalValues[proposals.length - 1] = newTelegramGroupUrl;
+    // }
 
-    function approveNewTitleProposal(uint index) external activeVoterOnly {
+    function approveNewTitleProposal(uint index) external {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.title,
-            "Usulan ini bukan untuk judul"
+            "Kategori usulan bukan judul"
         );
 
         if (_approveProposal(index)) {
@@ -678,13 +687,13 @@ contract Group {
         }
     }
 
-    function approveNewTelegramGroupProposal(
+    function approveNewTelegramGroupUrlProposal(
         uint index
     ) external activeVoterOnly {
         Proposal storage proposal = proposals[index];
         require(
-            proposal.category == ProposalCategory.telegramGroup,
-            "Usulan ini bukan untuk grup telegram"
+            proposal.category == ProposalCategory.telegramGroupUrl,
+            "Kategori usulan bukan url grup telegram"
         );
 
         if (_approveProposal(index)) {
@@ -692,6 +701,18 @@ contract Group {
             incompleteProposalIndexes.remove(index);
             delete stringProposalValues[index];
         }
+    }
+
+    function rejectStringProposal(uint index) external {
+        Proposal storage proposal = proposals[index];
+        require(
+            proposal.category == ProposalCategory.title ||
+                proposal.category == ProposalCategory.telegramGroupUrl,
+            "Kategori usulan bukan judul / url grup telegram"
+        );
+
+        _rejectProposal(index);
+        delete stringProposalValues[index];
     }
 
     function proposeNewMember(
@@ -720,7 +741,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.newMember,
-            "Usulan ini bukan untuk anggota baru"
+            "Kategori usulan bukan anggota baru"
         );
 
         if (_approveProposal(index)) {
@@ -743,13 +764,36 @@ contract Group {
         }
     }
 
+    function rejectNewMemberProposal(uint index) external {
+        Proposal storage proposal = proposals[index];
+        require(
+            proposal.category == ProposalCategory.newMember,
+            "Kategori usulan bukan anggota baru"
+        );
+
+        _rejectProposal(index);
+        delete newMemberProposalValues[index];
+    }
+
+    function proposeNewContributionAmountInWei(
+        uint newContributionAmountInWei
+    ) external activeVoterOnly {
+        require(
+            newContributionAmountInWei > 0,
+            "Jumlah kontribusi tidak boleh 0"
+        );
+        _propose(ProposalCategory.contributionAmount);
+
+        uintProposalValues[proposals.length - 1] = newContributionAmountInWei;
+    }
+
     function approveContributionAmountProposal(
         uint index
     ) external activeVoterOnly {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.contributionAmount,
-            "Usulan ini bukan untuk jumlah kontribusi"
+            "Kategori usulan bukan jumlah kontribusi"
         );
 
         if (_approveProposal(index)) {
@@ -777,7 +821,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.prizePercentage,
-            "Usulan ini bukan untuk persentase hadiah"
+            "Kategori usulan bukan persentase hadiah"
         );
 
         if (_approveProposal(index)) {
@@ -802,14 +846,14 @@ contract Group {
         ] = newCoordinatorCommissionPercentage;
     }
 
-    function approveCoordinatorCommissionPercentage(
+    function approveNewCoordinatorCommissionPercentageProposal(
         uint index
     ) external activeVoterOnly {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category ==
                 ProposalCategory.coordinatorCommissionPercentage,
-            "Usulan ini bukan untuk persentase komisi koordinator"
+            "Kategori usulan bukan persentase komisi koordinator"
         );
 
         if (_approveProposal(index)) {
@@ -817,6 +861,20 @@ contract Group {
             incompleteProposalIndexes.remove(index);
             delete uintProposalValues[index];
         }
+    }
+
+    function rejectUintProposal(uint index) external {
+        Proposal storage proposal = proposals[index];
+        require(
+            proposal.category == ProposalCategory.contributionAmount ||
+                proposal.category == ProposalCategory.prizePercentage ||
+                proposal.category ==
+                ProposalCategory.coordinatorCommissionPercentage,
+            "Kategori usulan bukan jumlah kontribusi / persentase hadiah / persentase komisi koordinator"
+        );
+
+        _rejectProposal(index);
+        delete uintProposalValues[index];
     }
 
     function proposeNewCoordinator(address newValue) external activeVoterOnly {
@@ -830,7 +888,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.coordinator,
-            "Usulan ini bukan untuk koordinator baru"
+            "Kategori usulan bukan koordinator baru"
         );
 
         if (_approveProposal(index)) {
@@ -838,6 +896,17 @@ contract Group {
             incompleteProposalIndexes.remove(index);
             delete coordinatorProposalValues[index];
         }
+    }
+
+    function rejectNewCoordinatorProposal(uint index) external {
+        Proposal storage proposal = proposals[index];
+        require(
+            proposal.category == ProposalCategory.coordinator,
+            "Kategori usulan bukan koordinator baru"
+        );
+
+        _rejectProposal(index);
+        delete coordinatorProposalValues[index];
     }
 
     function proposeTransfer(
@@ -886,6 +955,17 @@ contract Group {
             delete transferProposalValues[index];
         }
     }
+
+    function rejectTransferProposal(uint index) external {
+        Proposal storage proposal = proposals[index];
+        require(
+            proposal.category == ProposalCategory.transfer,
+            "Kategori usulan bukan transfer"
+        );
+
+        _rejectProposal(index);
+        delete transferProposalValues[index];
+    }
 }
 
 enum JoinStatus {
@@ -903,7 +983,7 @@ enum ApprovalStatus {
 
 enum ProposalCategory {
     title,
-    telegramGroup,
+    telegramGroupUrl,
     coordinatorCommissionPercentage,
     contributionAmount,
     prizePercentage,

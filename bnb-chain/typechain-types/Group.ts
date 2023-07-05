@@ -211,10 +211,10 @@ export interface GroupInterface extends utils.Interface {
   functions: {
     "activeVotersCount()": FunctionFragment;
     "approveContributionAmountProposal(uint256)": FunctionFragment;
-    "approveCoordinatorCommissionPercentage(uint256)": FunctionFragment;
+    "approveNewCoordinatorCommissionPercentageProposal(uint256)": FunctionFragment;
     "approveNewCoordinatorProposal(uint256)": FunctionFragment;
     "approveNewMemberProposal(uint256)": FunctionFragment;
-    "approveNewTelegramGroupProposal(uint256)": FunctionFragment;
+    "approveNewTelegramGroupUrlProposal(uint256)": FunctionFragment;
     "approveNewTitleProposal(uint256)": FunctionFragment;
     "approvePrizePercentageProposal(uint256)": FunctionFragment;
     "approveTransferProposal(uint256)": FunctionFragment;
@@ -249,7 +249,11 @@ export interface GroupInterface extends utils.Interface {
     "proposeNewPrizePercentage(uint256)": FunctionFragment;
     "proposeNewString(string,uint8)": FunctionFragment;
     "proposeTransfer(address,uint256)": FunctionFragment;
-    "rejectProposal(uint256)": FunctionFragment;
+    "rejectNewCoordinatorProposal(uint256)": FunctionFragment;
+    "rejectNewMemberProposal(uint256)": FunctionFragment;
+    "rejectStringProposal(uint256)": FunctionFragment;
+    "rejectTransferProposal(uint256)": FunctionFragment;
+    "rejectUintProposal(uint256)": FunctionFragment;
     "startPeriod()": FunctionFragment;
     "stringProposalValues(uint256)": FunctionFragment;
     "telegramGroupUrl()": FunctionFragment;
@@ -262,10 +266,10 @@ export interface GroupInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "activeVotersCount"
       | "approveContributionAmountProposal"
-      | "approveCoordinatorCommissionPercentage"
+      | "approveNewCoordinatorCommissionPercentageProposal"
       | "approveNewCoordinatorProposal"
       | "approveNewMemberProposal"
-      | "approveNewTelegramGroupProposal"
+      | "approveNewTelegramGroupUrlProposal"
       | "approveNewTitleProposal"
       | "approvePrizePercentageProposal"
       | "approveTransferProposal"
@@ -300,7 +304,11 @@ export interface GroupInterface extends utils.Interface {
       | "proposeNewPrizePercentage"
       | "proposeNewString"
       | "proposeTransfer"
-      | "rejectProposal"
+      | "rejectNewCoordinatorProposal"
+      | "rejectNewMemberProposal"
+      | "rejectStringProposal"
+      | "rejectTransferProposal"
+      | "rejectUintProposal"
       | "startPeriod"
       | "stringProposalValues"
       | "telegramGroupUrl"
@@ -318,7 +326,7 @@ export interface GroupInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "approveCoordinatorCommissionPercentage",
+    functionFragment: "approveNewCoordinatorCommissionPercentageProposal",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -330,7 +338,7 @@ export interface GroupInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "approveNewTelegramGroupProposal",
+    functionFragment: "approveNewTelegramGroupUrlProposal",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -467,7 +475,23 @@ export interface GroupInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "rejectProposal",
+    functionFragment: "rejectNewCoordinatorProposal",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "rejectNewMemberProposal",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "rejectStringProposal",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "rejectTransferProposal",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "rejectUintProposal",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -501,7 +525,7 @@ export interface GroupInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approveCoordinatorCommissionPercentage",
+    functionFragment: "approveNewCoordinatorCommissionPercentageProposal",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -513,7 +537,7 @@ export interface GroupInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approveNewTelegramGroupProposal",
+    functionFragment: "approveNewTelegramGroupUrlProposal",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -638,7 +662,23 @@ export interface GroupInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "rejectProposal",
+    functionFragment: "rejectNewCoordinatorProposal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "rejectNewMemberProposal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "rejectStringProposal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "rejectTransferProposal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "rejectUintProposal",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -714,7 +754,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    approveCoordinatorCommissionPercentage(
+    approveNewCoordinatorCommissionPercentageProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -729,7 +769,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    approveNewTelegramGroupProposal(
+    approveNewTelegramGroupUrlProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -903,7 +943,27 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    rejectProposal(
+    rejectNewCoordinatorProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    rejectNewMemberProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    rejectStringProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    rejectTransferProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    rejectUintProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -941,7 +1001,7 @@ export interface Group extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  approveCoordinatorCommissionPercentage(
+  approveNewCoordinatorCommissionPercentageProposal(
     index: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -956,7 +1016,7 @@ export interface Group extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  approveNewTelegramGroupProposal(
+  approveNewTelegramGroupUrlProposal(
     index: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1130,7 +1190,27 @@ export interface Group extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  rejectProposal(
+  rejectNewCoordinatorProposal(
+    index: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  rejectNewMemberProposal(
+    index: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  rejectStringProposal(
+    index: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  rejectTransferProposal(
+    index: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  rejectUintProposal(
     index: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1168,7 +1248,7 @@ export interface Group extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    approveCoordinatorCommissionPercentage(
+    approveNewCoordinatorCommissionPercentageProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1183,7 +1263,7 @@ export interface Group extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    approveNewTelegramGroupProposal(
+    approveNewTelegramGroupUrlProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1351,7 +1431,27 @@ export interface Group extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    rejectProposal(
+    rejectNewCoordinatorProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    rejectNewMemberProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    rejectStringProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    rejectTransferProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    rejectUintProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1393,7 +1493,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    approveCoordinatorCommissionPercentage(
+    approveNewCoordinatorCommissionPercentageProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1408,7 +1508,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    approveNewTelegramGroupProposal(
+    approveNewTelegramGroupUrlProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1563,7 +1663,27 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    rejectProposal(
+    rejectNewCoordinatorProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    rejectNewMemberProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    rejectStringProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    rejectTransferProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    rejectUintProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1600,7 +1720,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    approveCoordinatorCommissionPercentage(
+    approveNewCoordinatorCommissionPercentageProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1615,7 +1735,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    approveNewTelegramGroupProposal(
+    approveNewTelegramGroupUrlProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1772,7 +1892,27 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    rejectProposal(
+    rejectNewCoordinatorProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    rejectNewMemberProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    rejectStringProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    rejectTransferProposal(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    rejectUintProposal(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

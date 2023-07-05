@@ -60,11 +60,11 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
       }
 
       case ProposalCategory.telegramGroup:
-        return connectedGroupContract.approveNewTelegramGroupProposal(
+        return connectedGroupContract.approveNewTelegramGroupUrlProposal(
           proposalIndex
         );
       case ProposalCategory.coordinatorCommissionPercentage:
-        return connectedGroupContract.approveCoordinatorCommissionPercentage(
+        return connectedGroupContract.approveNewCoordinatorCommissionPercentageProposal(
           proposalIndex
         );
       case ProposalCategory.contributionAmount:
@@ -83,6 +83,35 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
         );
       case ProposalCategory.transfer:
         return connectedGroupContract.approveTransferProposal(proposalIndex);
+      default:
+        throw new Error('Kategori proposal tidak diketahui');
+    }
+  };
+
+  const rejectBasedOnCategory = (
+    proposal: Proposal
+  ): Promise<ContractTransaction> => {
+    switch (proposal.category) {
+      case ProposalCategory.title: {
+        return connectedGroupContract.approveNewTitleProposal(proposalIndex);
+      }
+
+      case ProposalCategory.telegramGroup:
+        return connectedGroupContract.rejectStringProposal(proposalIndex);
+      case ProposalCategory.coordinatorCommissionPercentage:
+        return connectedGroupContract.rejectUintProposal(proposalIndex);
+      case ProposalCategory.contributionAmount:
+        return connectedGroupContract.rejectUintProposal(proposalIndex);
+      case ProposalCategory.prizePercentage:
+        return connectedGroupContract.rejectUintProposal(proposalIndex);
+      case ProposalCategory.newMember:
+        return connectedGroupContract.rejectNewMemberProposal(proposalIndex);
+      case ProposalCategory.coordinator:
+        return connectedGroupContract.rejectNewCoordinatorProposal(
+          proposalIndex
+        );
+      case ProposalCategory.transfer:
+        return connectedGroupContract.rejectTransferProposal(proposalIndex);
       default:
         throw new Error('Kategori proposal tidak diketahui');
     }
@@ -108,11 +137,11 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
     }
   };
 
-  const onDisapprove = async () => {
+  const onReject = async () => {
     if (window.confirm('Konfirmasi penolakan anda.')) {
       try {
         setIsLoading(true);
-        const tx = await connectedGroupContract.rejectProposal(proposalIndex);
+        const tx = await rejectBasedOnCategory(proposal);
         await tx.wait();
         showSuccessToast('Proposal berhasil ditolak');
         router.refresh();
@@ -153,7 +182,7 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
         Setuju
       </td>
       <td
-        onClick={onDisapprove}
+        onClick={onReject}
         className={`hover:underline border-2 border-gray-500 px-4 py-2 ${
           className || ''
         }`}
