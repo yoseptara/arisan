@@ -128,11 +128,8 @@ contract Group {
         _;
     }
 
-    modifier onlyDuringOngoingPeriod() {
-        require(
-            periods.length > 0 && periods[periods.length - 1].endedAt == 0,
-            "Tidak ada periode yang sedang berlangsung"
-        );
+    modifier ongoingPeriodOnly(uint index) {
+        require(periods[index].endedAt == 0, "Periode ini sudah berakhir");
         _;
     }
 
@@ -405,15 +402,18 @@ contract Group {
         // delete members[msg.sender];
     }
 
-    function contribute() public payable memberOnly onlyDuringOngoingPeriod {
-        Period storage lastPeriod = _getLastPeriod();
+    function contribute(
+        uint periodIndex
+    ) public payable memberOnly ongoingPeriodOnly(periodIndex) {
+        Period storage period = periods[periodIndex];
         uint senderContributionCount = periodToParticipantToContributionCountMaps[
-                periods.length - 1
+                periodIndex
             ].contains(msg.sender)
-                ? periodToParticipantToContributionCountMaps[periods.length - 1]
-                    .get(msg.sender)
+                ? periodToParticipantToContributionCountMaps[periodIndex].get(
+                    msg.sender
+                )
                 : 0;
-        uint lastContributionDifference = lastPeriod.rounds.length -
+        uint lastContributionDifference = period.rounds.length -
             senderContributionCount;
 
         require(
@@ -421,8 +421,8 @@ contract Group {
             "Anda sudah berkontribusi / tidak berpartisipasi pada putaran sebelumnya"
         );
 
-        uint finalContributionAmountInWei = (lastPeriod
-            .contributionAmountInWei * lastContributionDifference);
+        uint finalContributionAmountInWei = (period.contributionAmountInWei *
+            lastContributionDifference);
 
         require(
             msg.value == finalContributionAmountInWei,
@@ -430,16 +430,16 @@ contract Group {
         );
 
         if (senderContributionCount == 0) {
-            lastPeriod.dueWinners.push(msg.sender);
+            period.dueWinners.push(msg.sender);
         }
 
-        periodToParticipantToContributionCountMaps[periods.length - 1].set(
+        periodToParticipantToContributionCountMaps[periodIndex].set(
             msg.sender,
-            lastPeriod.rounds.length
+            period.rounds.length
         );
 
-        _getLastRound(periods.length - 1).contributorCount++;
-        lastPeriod.remainingPeriodBalanceInWei += finalContributionAmountInWei;
+        _getLastRound(periodIndex).contributorCount++;
+        period.remainingPeriodBalanceInWei += finalContributionAmountInWei;
         // lastPeriod.prizeForEachWinnerInWei =
         //     ((lastPeriod.contributionAmountInWei *
         //         lastPeriod.rounds[0].contributorCount) * prizePercentage) /
@@ -450,7 +450,7 @@ contract Group {
             sender.isActiveVoter = true;
             activeVotersCount++;
         }
-        sender.latestPeriodParticipation = periods.length - 1;
+        sender.latestPeriodParticipation = periodIndex;
     }
 
     function startPeriod() external payable coordinatorOnly {
@@ -488,23 +488,25 @@ contract Group {
         newPeriod.prizePercentage = prizePercentage;
         newPeriod.rounds.push();
 
-        contribute();
+        contribute(periods.length - 1);
     }
 
-    function drawWinner() external coordinatorOnly onlyDuringOngoingPeriod {
-        Period storage lastPeriod = _getLastPeriod();
-        address[] storage dueWinners = lastPeriod.dueWinners;
+    function drawWinner(
+        uint periodIndex
+    ) external coordinatorOnly ongoingPeriodOnly(periodIndex) {
+        Period storage period = periods[periodIndex];
+        address[] storage dueWinners = period.dueWinners;
 
         require(
             dueWinners.length > 0,
             "Semua partisipan sudah mendapatkan giliran sebagai pemenang"
         );
 
-        Round storage lastRound = _getLastRound(periods.length - 1);
+        Round storage lastRound = _getLastRound(periodIndex);
 
         require(
             lastRound.contributorCount ==
-                periodToParticipantToContributionCountMaps[periods.length - 1]
+                periodToParticipantToContributionCountMaps[periodIndex]
                     .length(),
             "Jumlah partisipan belum terpenuhi"
         );
@@ -521,23 +523,22 @@ contract Group {
         dueWinners.pop();
 
         if (dueWinners.length > 0) {
-            lastPeriod.rounds.push(Round(0, address(0), 0));
+            period.rounds.push(Round(0, address(0), 0));
         } else {
-            endPeriod();
+            endPeriod(periodIndex);
         }
 
-        uint winnerPrize = ((lastPeriod.contributionAmountInWei *
-            lastPeriod.rounds[0].contributorCount) *
-            lastPeriod.prizePercentage) / 100;
+        uint winnerPrize = ((period.contributionAmountInWei *
+            period.rounds[0].contributorCount) * period.prizePercentage) / 100;
 
-        uint coordinatorCommission = ((lastPeriod.contributionAmountInWei *
-            lastPeriod.rounds[0].contributorCount) *
-            lastPeriod.coordinatorCommissionPercentage) / 100;
+        uint coordinatorCommission = ((period.contributionAmountInWei *
+            period.rounds[0].contributorCount) *
+            period.coordinatorCommissionPercentage) / 100;
 
         payable(lastRound.winner).transfer(winnerPrize);
         payable(coordinator).transfer(coordinatorCommission);
 
-        lastPeriod.remainingPeriodBalanceInWei -= (winnerPrize +
+        period.remainingPeriodBalanceInWei -= (winnerPrize +
             coordinatorCommission);
 
         emit WinnerDrawn(
@@ -551,12 +552,12 @@ contract Group {
         );
     }
 
-    function endPeriod() internal coordinatorOnly {
+    function endPeriod(uint index) internal coordinatorOnly {
         require(
             incompleteProposalIndexes.length() == 0,
             "Tidak boleh ada usulan yang belum selesai sebelum periode berakhir"
         );
-        _getLastPeriod().endedAt = block.timestamp;
+        periods[index].endedAt = block.timestamp;
         removeActiveVoter();
     }
 

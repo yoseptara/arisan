@@ -218,12 +218,12 @@ export interface GroupInterface extends utils.Interface {
     "approveNewTitleProposal(uint256)": FunctionFragment;
     "approvePrizePercentageProposal(uint256)": FunctionFragment;
     "approveTransferProposal(uint256)": FunctionFragment;
-    "contribute()": FunctionFragment;
+    "contribute(uint256)": FunctionFragment;
     "contributionAmountInWei()": FunctionFragment;
     "coordinator()": FunctionFragment;
     "coordinatorCommissionPercentage()": FunctionFragment;
     "coordinatorProposalValues(uint256)": FunctionFragment;
-    "drawWinner()": FunctionFragment;
+    "drawWinner(uint256)": FunctionFragment;
     "getApproverByIndexAndProposalIndex(uint256,uint256)": FunctionFragment;
     "getDueWinnerByIndexAndPeriodIndex(uint256,uint256)": FunctionFragment;
     "getGroupDetail()": FunctionFragment;
@@ -355,7 +355,7 @@ export interface GroupInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "contribute",
-    values?: undefined
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "contributionAmountInWei",
@@ -375,7 +375,7 @@ export interface GroupInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "drawWinner",
-    values?: undefined
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getApproverByIndexAndProposalIndex",
@@ -790,6 +790,7 @@ export interface Group extends BaseContract {
     ): Promise<ContractTransaction>;
 
     contribute(
+      periodIndex: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -807,6 +808,7 @@ export interface Group extends BaseContract {
     ): Promise<[string]>;
 
     drawWinner(
+      periodIndex: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1037,6 +1039,7 @@ export interface Group extends BaseContract {
   ): Promise<ContractTransaction>;
 
   contribute(
+    periodIndex: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1054,6 +1057,7 @@ export interface Group extends BaseContract {
   ): Promise<string>;
 
   drawWinner(
+    periodIndex: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1283,7 +1287,10 @@ export interface Group extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    contribute(overrides?: CallOverrides): Promise<void>;
+    contribute(
+      periodIndex: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     contributionAmountInWei(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1298,7 +1305,10 @@ export interface Group extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    drawWinner(overrides?: CallOverrides): Promise<void>;
+    drawWinner(
+      periodIndex: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     getApproverByIndexAndProposalIndex(
       index: PromiseOrValue<BigNumberish>,
@@ -1529,6 +1539,7 @@ export interface Group extends BaseContract {
     ): Promise<BigNumber>;
 
     contribute(
+      periodIndex: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1546,6 +1557,7 @@ export interface Group extends BaseContract {
     ): Promise<BigNumber>;
 
     drawWinner(
+      periodIndex: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1756,6 +1768,7 @@ export interface Group extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     contribute(
+      periodIndex: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1775,6 +1788,7 @@ export interface Group extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     drawWinner(
+      periodIndex: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

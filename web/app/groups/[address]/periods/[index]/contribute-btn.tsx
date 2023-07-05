@@ -14,8 +14,10 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function ContributeBtn({
+  periodIndex,
   groupAddress
 }: {
+  periodIndex: string;
   groupAddress: string;
 }) {
   const router = useRouter();
@@ -41,7 +43,7 @@ export default function ContributeBtn({
         setIsLoading(true);
         const contributionAmountInWei =
           await connectedGroupContract.contributionAmountInWei();
-        const tx = await connectedGroupContract.contribute({
+        const tx = await connectedGroupContract.contribute(periodIndex, {
           value: contributionAmountInWei
         });
         await tx.wait();

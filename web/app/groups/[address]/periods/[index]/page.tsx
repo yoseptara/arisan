@@ -101,8 +101,8 @@ export default async function GroupPeriodDetailPage({
       </div>
       <div className="my-2" />
       <div className="flex">
-        <ContributeBtn groupAddress={address} />
-        <DrawWinnerBtn groupAddress={address} />
+        <ContributeBtn groupAddress={address} periodIndex={index} />
+        <DrawWinnerBtn groupAddress={address} periodIndex={index} />
       </div>
       <div className="my-8"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">

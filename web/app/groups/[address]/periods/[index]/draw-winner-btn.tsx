@@ -14,7 +14,13 @@ import { showSuccessToast } from '@root/utils/toastUtils';
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
 
-function DrawWinnerBtn({ groupAddress }: { groupAddress: string }) {
+function DrawWinnerBtn({
+  periodIndex,
+  groupAddress
+}: {
+  periodIndex: string;
+  groupAddress: string;
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { web3Provider, address } = useWeb3Context();
@@ -39,7 +45,7 @@ function DrawWinnerBtn({ groupAddress }: { groupAddress: string }) {
     ) {
       try {
         setIsLoading(true);
-        const tx = await connectedGroupContract.drawWinner();
+        const tx = await connectedGroupContract.drawWinner(periodIndex);
         await tx.wait();
       } catch (err) {
         setIsLoading(false);
