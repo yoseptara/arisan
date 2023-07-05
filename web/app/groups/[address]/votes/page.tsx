@@ -101,7 +101,7 @@ function categoryToText(category: ProposalCategory): string {
     [ProposalCategory.title]: 'Judul kelompok',
     [ProposalCategory.telegramGroup]: 'Url grup telegram',
     [ProposalCategory.coordinatorCommissionPercentage]:
-      'Persentase hadiah untuk koordinator',
+      'Persentase komisi untuk koordinator',
     [ProposalCategory.contributionAmount]: 'Syarat jumlah kontribusi',
     [ProposalCategory.prizePercentage]:
       'Persentase hadiah untuk pemenang undian',
