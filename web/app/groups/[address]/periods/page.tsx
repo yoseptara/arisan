@@ -169,11 +169,9 @@ export default async function GroupPeriodsPage({
                   {(period.index + BigInt(0)).toString()}
                 </td>
                 <td className="border-2 border-gray-500 px-4 py-2">
-                  {
-                    <ClientDateLocaleString
-                      timestamp={period.startedAtTimestamp}
-                    />
-                  }{' '}
+                  <ClientDateLocaleString
+                    timestamp={period.startedAtTimestamp}
+                  />{' '}
                   -{' '}
                   {period.endedAtTimestamp > 0 ? (
                     <ClientDateLocaleString

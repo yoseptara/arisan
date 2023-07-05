@@ -235,7 +235,7 @@ export default async function GroupVotingPage({
             return (
               <tr key={proposal.index}>
                 <td className="border-2 border-gray-500 px-4 py-2">
-                  {<ClientDateLocaleString timestamp={proposedAtTimestamp} />}
+                  <ClientDateLocaleString timestamp={proposedAtTimestamp} />
                 </td>
                 <td className="border-2 border-gray-500 px-4 py-2">
                   {`${proposer.walletAddress}\nTelegram username: ${

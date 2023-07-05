@@ -107,12 +107,12 @@ export default async function GroupPeriodDetailPage({
       <div className="my-8"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
         Rentang Waktu :{' '}
-        {<ClientDateLocaleString timestamp={period.startedAtTimestamp} />} -{' '}
-        {period.endedAtTimestamp > 0
-          ? `${(
-              <ClientDateLocaleString timestamp={period.endedAtTimestamp} />
-            )}`
-          : `Belum berakhir`}
+        <ClientDateLocaleString timestamp={period.startedAtTimestamp} /> -{' '}
+        {period.endedAtTimestamp > 0 ? (
+          <ClientDateLocaleString timestamp={period.endedAtTimestamp} />
+        ) : (
+          `Belum berakhir`
+        )}
       </p>
       <div className="my-2"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
