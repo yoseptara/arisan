@@ -12,7 +12,7 @@ contract ArisanGroupFactory {
         string calldata title,
         string calldata telegramGroupUrl,
         string calldata coordinatorTelegramUsername,
-        uint coordinatorRewardPercentage,
+        uint coordinatorCommissionPercentage,
         uint contributionAmountInWei,
         uint prizePercentage
     ) external {
@@ -20,8 +20,8 @@ contract ArisanGroupFactory {
             bytes(title).length != 0 &&
                 bytes(telegramGroupUrl).length != 0 &&
                 bytes(coordinatorTelegramUsername).length != 0 &&
-                coordinatorRewardPercentage < 100 - prizePercentage &&
-                prizePercentage < 100 - coordinatorRewardPercentage &&
+                coordinatorCommissionPercentage < 100 - prizePercentage &&
+                prizePercentage < 100 - coordinatorCommissionPercentage &&
                 contributionAmountInWei > 0,
             "Data tidak lengkap"
         );
@@ -30,7 +30,7 @@ contract ArisanGroupFactory {
             telegramGroupUrl,
             msg.sender,
             coordinatorTelegramUsername,
-            coordinatorRewardPercentage,
+            coordinatorCommissionPercentage,
             contributionAmountInWei,
             prizePercentage
         );
@@ -50,7 +50,7 @@ contract Group {
     string public title;
     string public telegramGroupUrl;
     address public coordinator;
-    uint public coordinatorRewardPercentage;
+    uint public coordinatorCommissionPercentage;
     uint public contributionAmountInWei;
     uint public prizePercentage;
 
@@ -83,14 +83,14 @@ contract Group {
         string memory _telegramGroupUrl,
         address _coordinator,
         string memory coordinatorTelegramUsername,
-        uint _coordinatorRewardPercentage,
+        uint _coordinatorCommissionPercentage,
         uint _contributionAmountInWei,
         uint _prizePercentage
     ) {
         title = _title;
         telegramGroupUrl = _telegramGroupUrl;
         coordinator = _coordinator;
-        coordinatorRewardPercentage = _coordinatorRewardPercentage;
+        coordinatorCommissionPercentage = _coordinatorCommissionPercentage;
         contributionAmountInWei = _contributionAmountInWei;
         prizePercentage = _prizePercentage;
 
@@ -136,13 +136,10 @@ contract Group {
     }
 
     modifier votableProposalOnly(uint index) {
-        require(
-            proposals[index].completedAt == 0,
-            "Proposal ini sudah berakhir"
-        );
+        require(proposals[index].completedAt == 0, "Usulan ini sudah berakhir");
         require(
             proposalsApprovals[index][msg.sender] == ApprovalStatus.unset,
-            "Anda sudah memberi suara pada proposal ini"
+            "Anda sudah memberi suara pada usulan ini"
         );
         _;
     }
@@ -153,7 +150,7 @@ contract Group {
             periods.length > 0 &&
                 lastPeriod.endedAt == 0 &&
                 lastPeriod.dueWinners.length == 0 &&
-                lastPeriod.totalContributionInWei > 0,
+                lastPeriod.remainingPeriodBalanceInWei > 0,
             "Tidak ada periode berlangsung yang bisa diakhiri"
         );
         _;
@@ -214,7 +211,7 @@ contract Group {
                     latestPeriodParticipation: members[coordinator]
                         .latestPeriodParticipation
                 }),
-                coordinatorRewardPercentage: coordinatorRewardPercentage,
+                coordinatorCommissionPercentage: coordinatorCommissionPercentage,
                 contributionAmountInWei: contributionAmountInWei,
                 prizePercentage: prizePercentage
             });
@@ -326,9 +323,12 @@ contract Group {
             ExternalPeriod({
                 startedAt: period.startedAt,
                 endedAt: period.endedAt,
-                totalContributionInWei: period.totalContributionInWei,
+                remainingPeriodBalanceInWei: period.remainingPeriodBalanceInWei,
                 contributionAmountInWei: period.contributionAmountInWei,
-                prizeForEachWinnerInWei: period.prizeForEachWinnerInWei,
+                coordinatorCommissionPercentage: period
+                    .coordinatorCommissionPercentage,
+                prizePercentage: period.prizePercentage,
+                // prizeForEachWinnerInWei: period.prizeForEachWinnerInWei,
                 roundsCount: period.rounds.length,
                 dueWinnersCount: period.dueWinners.length
             });
@@ -438,11 +438,11 @@ contract Group {
         );
 
         _getLastRound(periods.length - 1).contributorCount++;
-        lastPeriod.totalContributionInWei += finalContributionAmountInWei;
-        lastPeriod.prizeForEachWinnerInWei =
-            ((lastPeriod.contributionAmountInWei *
-                lastPeriod.rounds[0].contributorCount) * prizePercentage) /
-            100;
+        lastPeriod.remainingPeriodBalanceInWei += finalContributionAmountInWei;
+        // lastPeriod.prizeForEachWinnerInWei =
+        //     ((lastPeriod.contributionAmountInWei *
+        //         lastPeriod.rounds[0].contributorCount) * prizePercentage) /
+        //     100;
 
         Member storage sender = members[msg.sender];
         if (sender.isActiveVoter == false) {
@@ -457,10 +457,24 @@ contract Group {
             periods.length == 0 || periods[periods.length - 1].endedAt > 0,
             "Periode terakhir belum berakhir"
         );
-        require(
-            incompleteProposalIndexes.length() == 0,
-            "Tidak boleh ada proposal yang belum selesai"
-        );
+        // require(
+        //     incompleteProposalIndexes.length() == 0,
+        //     "Tidak boleh ada proposal yang belum selesai"
+        // );
+
+        // periods.push(
+        //     Period({
+        //         startedAt: block.timestamp,
+        //         endedAt: 0,
+        //         totalContributionInWei: 0,
+        //         contributionAmountInWei: contributionAmountInWei,
+        //         coordinatorCommissionPercentage: coordinatorCommissionPercentage,
+        //         prizePercentage: prizePercentage,
+        //         prizeForEachWinnerInWei: 0,
+        //         rounds: new Round[](0),
+        //         dueWinners: new address[](0)
+        //     })
+        // );
 
         periods.push();
 
@@ -468,6 +482,9 @@ contract Group {
 
         newPeriod.startedAt = block.timestamp;
         newPeriod.contributionAmountInWei = contributionAmountInWei;
+        newPeriod
+            .coordinatorCommissionPercentage = coordinatorCommissionPercentage;
+        newPeriod.prizePercentage = prizePercentage;
         newPeriod.rounds.push();
 
         contribute();
@@ -508,8 +525,19 @@ contract Group {
             endPeriod();
         }
 
-        payable(lastRound.winner).transfer(lastPeriod.prizeForEachWinnerInWei);
-        lastPeriod.totalContributionInWei -= lastPeriod.prizeForEachWinnerInWei;
+        uint winnerPrize = ((lastPeriod.contributionAmountInWei *
+            lastPeriod.rounds[0].contributorCount) *
+            lastPeriod.prizePercentage) / 100;
+
+        uint coordinatorCommission = ((lastPeriod.contributionAmountInWei *
+            lastPeriod.rounds[0].contributorCount) *
+            lastPeriod.coordinatorCommissionPercentage) / 100;
+
+        payable(lastRound.winner).transfer(winnerPrize);
+        payable(coordinator).transfer(coordinatorCommission);
+
+        lastPeriod.remainingPeriodBalanceInWei -= (winnerPrize +
+            coordinatorCommission);
 
         emit WinnerDrawn(
             ExternalMember({
@@ -523,6 +551,10 @@ contract Group {
     }
 
     function endPeriod() internal coordinatorOnly {
+        require(
+            incompleteProposalIndexes.length() == 0,
+            "Tidak boleh ada usulan yang belum selesai sebelum periode berakhir"
+        );
         _getLastPeriod().endedAt = block.timestamp;
         removeActiveVoter();
     }
@@ -636,7 +668,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.title,
-            "Proposal ini bukan untuk judul"
+            "Usulan ini bukan untuk judul"
         );
 
         if (_approveProposal(index)) {
@@ -652,7 +684,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.telegramGroup,
-            "Proposal ini bukan untuk grup telegram"
+            "Usulan ini bukan untuk grup telegram"
         );
 
         if (_approveProposal(index)) {
@@ -688,7 +720,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.newMember,
-            "Proposal ini bukan untuk anggota baru"
+            "Usulan ini bukan untuk anggota baru"
         );
 
         if (_approveProposal(index)) {
@@ -717,7 +749,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.contributionAmount,
-            "Proposal ini bukan untuk jumlah kontribusi"
+            "Usulan ini bukan untuk jumlah kontribusi"
         );
 
         if (_approveProposal(index)) {
@@ -730,7 +762,7 @@ contract Group {
     function proposeNewPrizePercentage(
         uint newPrizePercentage
     ) external activeVoterOnly {
-        uint limit = 100 - coordinatorRewardPercentage;
+        uint limit = 100 - coordinatorCommissionPercentage;
         require(
             newPrizePercentage <= limit && newPrizePercentage >= 0,
             "Angka persentase hadiah yang diajukan melebihi batas"
@@ -745,7 +777,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.prizePercentage,
-            "Proposal ini bukan untuk persentase hadiah"
+            "Usulan ini bukan untuk persentase hadiah"
         );
 
         if (_approveProposal(index)) {
@@ -755,32 +787,33 @@ contract Group {
         }
     }
 
-    function proposeNewCoordinatorRewardPercentage(
-        uint newCoordinatorRewardPercentage
+    function proposeNewCoordinatorCommissionPercentage(
+        uint newCoordinatorCommissionPercentage
     ) external activeVoterOnly {
         uint limit = 100 - prizePercentage;
         require(
-            newCoordinatorRewardPercentage <= limit &&
-                newCoordinatorRewardPercentage >= 0,
-            "Angka persentase keuntungan koordinator yang diajukan melebihi batas"
+            newCoordinatorCommissionPercentage <= limit &&
+                newCoordinatorCommissionPercentage >= 0,
+            "Angka persentase komisi koordinator yang diajukan melebihi batas"
         );
-        _propose(ProposalCategory.coordinatorRewardPercentage);
+        _propose(ProposalCategory.coordinatorCommissionPercentage);
         uintProposalValues[
             proposals.length - 1
-        ] = newCoordinatorRewardPercentage;
+        ] = newCoordinatorCommissionPercentage;
     }
 
-    function approveCoordinatorRewardPercentageProposal(
+    function approveCoordinatorCommissionPercentage(
         uint index
     ) external activeVoterOnly {
         Proposal storage proposal = proposals[index];
         require(
-            proposal.category == ProposalCategory.coordinatorRewardPercentage,
-            "Proposal ini bukan untuk persentase keuntungan koordinator"
+            proposal.category ==
+                ProposalCategory.coordinatorCommissionPercentage,
+            "Usulan ini bukan untuk persentase komisi koordinator"
         );
 
         if (_approveProposal(index)) {
-            coordinatorRewardPercentage = uintProposalValues[index];
+            coordinatorCommissionPercentage = uintProposalValues[index];
             incompleteProposalIndexes.remove(index);
             delete uintProposalValues[index];
         }
@@ -797,7 +830,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         require(
             proposal.category == ProposalCategory.coordinator,
-            "Proposal ini bukan untuk koordinator baru"
+            "Usulan ini bukan untuk koordinator baru"
         );
 
         if (_approveProposal(index)) {
@@ -813,7 +846,7 @@ contract Group {
     ) external activeVoterOnly {
         Period storage lastPeriod = _getLastPeriod();
         uint lockedBalance = lastPeriod.endedAt == 0
-            ? lastPeriod.totalContributionInWei
+            ? lastPeriod.remainingPeriodBalanceInWei
             : 0;
         require(
             address(this).balance - lockedBalance >= transferAmount,
@@ -831,7 +864,7 @@ contract Group {
         Proposal storage proposal = proposals[index];
         Period storage lastPeriod = _getLastPeriod();
         uint lockedBalance = lastPeriod.endedAt == 0
-            ? lastPeriod.totalContributionInWei
+            ? lastPeriod.remainingPeriodBalanceInWei
             : 0;
 
         require(
@@ -842,7 +875,7 @@ contract Group {
 
         require(
             proposal.category == ProposalCategory.transfer,
-            "Kategori proposal bukan transfer"
+            "Kategori usulan bukan transfer"
         );
 
         if (_approveProposal(index)) {
@@ -871,7 +904,7 @@ enum ApprovalStatus {
 enum ProposalCategory {
     title,
     telegramGroup,
-    coordinatorRewardPercentage,
+    coordinatorCommissionPercentage,
     contributionAmount,
     prizePercentage,
     newMember,
@@ -894,7 +927,7 @@ struct GroupSettings {
     string title;
     string telegramGroupUrl;
     ExternalMember coordinator;
-    uint coordinatorRewardPercentage;
+    uint coordinatorCommissionPercentage;
     uint contributionAmountInWei;
     uint prizePercentage;
 }
@@ -923,9 +956,11 @@ struct Period {
     // uint id;
     uint startedAt;
     uint endedAt;
-    uint totalContributionInWei;
+    uint remainingPeriodBalanceInWei;
     uint contributionAmountInWei;
-    uint prizeForEachWinnerInWei;
+    uint coordinatorCommissionPercentage;
+    uint prizePercentage;
+    // uint prizeForEachWinnerInWei;
     Round[] rounds;
     address[] dueWinners;
 }
@@ -934,9 +969,11 @@ struct ExternalPeriod {
     // uint id;
     uint startedAt;
     uint endedAt;
-    uint totalContributionInWei;
+    uint remainingPeriodBalanceInWei;
     uint contributionAmountInWei;
-    uint prizeForEachWinnerInWei;
+    uint coordinatorCommissionPercentage;
+    uint prizePercentage;
+    // uint prizeForEachWinnerInWei;
     uint roundsCount;
     uint dueWinnersCount;
 }

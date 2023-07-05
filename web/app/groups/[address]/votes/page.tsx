@@ -100,9 +100,9 @@ function categoryToText(category: ProposalCategory): string {
   const categoryText: Record<ProposalCategory, string> = {
     [ProposalCategory.title]: 'Judul kelompok',
     [ProposalCategory.telegramGroup]: 'Url grup telegram',
-    [ProposalCategory.coordinatorRewardPercentage]:
+    [ProposalCategory.coordinatorCommissionPercentage]:
       'Persentase hadiah untuk koordinator',
-    [ProposalCategory.contributionAmount]: 'Kontribusi per orang',
+    [ProposalCategory.contributionAmount]: 'Syarat jumlah kontribusi',
     [ProposalCategory.prizePercentage]:
       'Persentase hadiah untuk pemenang undian',
     [ProposalCategory.newMember]: 'Anggota baru ingin bergabung',
@@ -124,7 +124,7 @@ function getNewValueBasedOnCategory(proposal: Proposal): string {
   const categoryToNewValueMap: Record<ProposalCategory, string> = {
     [ProposalCategory.title]: stringProposalValue,
     [ProposalCategory.telegramGroup]: stringProposalValue,
-    [ProposalCategory.coordinatorRewardPercentage]: uintProposalValue
+    [ProposalCategory.coordinatorCommissionPercentage]: uintProposalValue
       ? `${uintProposalValue.toString()} persen`
       : '',
     [ProposalCategory.contributionAmount]: uintProposalValue

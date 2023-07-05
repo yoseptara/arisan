@@ -84,7 +84,7 @@ export default function ContributionAmountProposalPage({
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="contributionAmountInBNB"
           >
-            Jumlah Syarat Kontribusi dalam BNB
+            Syarat Jumlah Kontribusi dalam BNB
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -93,7 +93,7 @@ export default function ContributionAmountProposalPage({
             max={100}
             min={0}
             required={true}
-            placeholder="Masukkan jumlah syarat kontribusi yang baru"
+            placeholder="Masukkan syarat jumlah kontribusi yang baru"
             pattern="^\d*([.,])?\d{0,18}$"
             onChange={(event) => {
               const value = event.target.value;

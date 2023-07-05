@@ -76,7 +76,7 @@ export type GroupSettingsStruct = {
   title: PromiseOrValue<string>;
   telegramGroupUrl: PromiseOrValue<string>;
   coordinator: ExternalMemberStruct;
-  coordinatorRewardPercentage: PromiseOrValue<BigNumberish>;
+  coordinatorCommissionPercentage: PromiseOrValue<BigNumberish>;
   contributionAmountInWei: PromiseOrValue<BigNumberish>;
   prizePercentage: PromiseOrValue<BigNumberish>;
 };
@@ -92,7 +92,7 @@ export type GroupSettingsStructOutput = [
   title: string;
   telegramGroupUrl: string;
   coordinator: ExternalMemberStructOutput;
-  coordinatorRewardPercentage: BigNumber;
+  coordinatorCommissionPercentage: BigNumber;
   contributionAmountInWei: BigNumber;
   prizePercentage: BigNumber;
 };
@@ -163,9 +163,10 @@ export type ExternalProposalStructOutput = [
 export type ExternalPeriodStruct = {
   startedAt: PromiseOrValue<BigNumberish>;
   endedAt: PromiseOrValue<BigNumberish>;
-  totalContributionInWei: PromiseOrValue<BigNumberish>;
+  remainingPeriodBalanceInWei: PromiseOrValue<BigNumberish>;
   contributionAmountInWei: PromiseOrValue<BigNumberish>;
-  prizeForEachWinnerInWei: PromiseOrValue<BigNumberish>;
+  coordinatorCommissionPercentage: PromiseOrValue<BigNumberish>;
+  prizePercentage: PromiseOrValue<BigNumberish>;
   roundsCount: PromiseOrValue<BigNumberish>;
   dueWinnersCount: PromiseOrValue<BigNumberish>;
 };
@@ -177,13 +178,15 @@ export type ExternalPeriodStructOutput = [
   BigNumber,
   BigNumber,
   BigNumber,
+  BigNumber,
   BigNumber
 ] & {
   startedAt: BigNumber;
   endedAt: BigNumber;
-  totalContributionInWei: BigNumber;
+  remainingPeriodBalanceInWei: BigNumber;
   contributionAmountInWei: BigNumber;
-  prizeForEachWinnerInWei: BigNumber;
+  coordinatorCommissionPercentage: BigNumber;
+  prizePercentage: BigNumber;
   roundsCount: BigNumber;
   dueWinnersCount: BigNumber;
 };
@@ -208,7 +211,7 @@ export interface GroupInterface extends utils.Interface {
   functions: {
     "activeVotersCount()": FunctionFragment;
     "approveContributionAmountProposal(uint256)": FunctionFragment;
-    "approveCoordinatorRewardPercentageProposal(uint256)": FunctionFragment;
+    "approveCoordinatorCommissionPercentage(uint256)": FunctionFragment;
     "approveNewCoordinatorProposal(uint256)": FunctionFragment;
     "approveNewMemberProposal(uint256)": FunctionFragment;
     "approveNewTelegramGroupProposal(uint256)": FunctionFragment;
@@ -218,8 +221,8 @@ export interface GroupInterface extends utils.Interface {
     "contribute()": FunctionFragment;
     "contributionAmountInWei()": FunctionFragment;
     "coordinator()": FunctionFragment;
+    "coordinatorCommissionPercentage()": FunctionFragment;
     "coordinatorProposalValues(uint256)": FunctionFragment;
-    "coordinatorRewardPercentage()": FunctionFragment;
     "drawWinner()": FunctionFragment;
     "getApproverByIndexAndProposalIndex(uint256,uint256)": FunctionFragment;
     "getDueWinnerByIndexAndPeriodIndex(uint256,uint256)": FunctionFragment;
@@ -241,7 +244,7 @@ export interface GroupInterface extends utils.Interface {
     "prizePercentage()": FunctionFragment;
     "proposeNewContributionAmountInWei(uint256)": FunctionFragment;
     "proposeNewCoordinator(address)": FunctionFragment;
-    "proposeNewCoordinatorRewardPercentage(uint256)": FunctionFragment;
+    "proposeNewCoordinatorCommissionPercentage(uint256)": FunctionFragment;
     "proposeNewMember(address,string)": FunctionFragment;
     "proposeNewPrizePercentage(uint256)": FunctionFragment;
     "proposeNewString(string,uint8)": FunctionFragment;
@@ -259,7 +262,7 @@ export interface GroupInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "activeVotersCount"
       | "approveContributionAmountProposal"
-      | "approveCoordinatorRewardPercentageProposal"
+      | "approveCoordinatorCommissionPercentage"
       | "approveNewCoordinatorProposal"
       | "approveNewMemberProposal"
       | "approveNewTelegramGroupProposal"
@@ -269,8 +272,8 @@ export interface GroupInterface extends utils.Interface {
       | "contribute"
       | "contributionAmountInWei"
       | "coordinator"
+      | "coordinatorCommissionPercentage"
       | "coordinatorProposalValues"
-      | "coordinatorRewardPercentage"
       | "drawWinner"
       | "getApproverByIndexAndProposalIndex"
       | "getDueWinnerByIndexAndPeriodIndex"
@@ -292,7 +295,7 @@ export interface GroupInterface extends utils.Interface {
       | "prizePercentage"
       | "proposeNewContributionAmountInWei"
       | "proposeNewCoordinator"
-      | "proposeNewCoordinatorRewardPercentage"
+      | "proposeNewCoordinatorCommissionPercentage"
       | "proposeNewMember"
       | "proposeNewPrizePercentage"
       | "proposeNewString"
@@ -315,7 +318,7 @@ export interface GroupInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "approveCoordinatorRewardPercentageProposal",
+    functionFragment: "approveCoordinatorCommissionPercentage",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -355,12 +358,12 @@ export interface GroupInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "coordinatorProposalValues",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "coordinatorCommissionPercentage",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "coordinatorRewardPercentage",
-    values?: undefined
+    functionFragment: "coordinatorProposalValues",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "drawWinner",
@@ -444,7 +447,7 @@ export interface GroupInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "proposeNewCoordinatorRewardPercentage",
+    functionFragment: "proposeNewCoordinatorCommissionPercentage",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -498,7 +501,7 @@ export interface GroupInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approveCoordinatorRewardPercentageProposal",
+    functionFragment: "approveCoordinatorCommissionPercentage",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -535,11 +538,11 @@ export interface GroupInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "coordinatorProposalValues",
+    functionFragment: "coordinatorCommissionPercentage",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "coordinatorRewardPercentage",
+    functionFragment: "coordinatorProposalValues",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "drawWinner", data: BytesLike): Result;
@@ -615,7 +618,7 @@ export interface GroupInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "proposeNewCoordinatorRewardPercentage",
+    functionFragment: "proposeNewCoordinatorCommissionPercentage",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -711,7 +714,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    approveCoordinatorRewardPercentageProposal(
+    approveCoordinatorCommissionPercentage(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -754,14 +757,14 @@ export interface Group extends BaseContract {
 
     coordinator(overrides?: CallOverrides): Promise<[string]>;
 
+    coordinatorCommissionPercentage(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     coordinatorProposalValues(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
-
-    coordinatorRewardPercentage(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
 
     drawWinner(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -850,12 +853,13 @@ export interface Group extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
         startedAt: BigNumber;
         endedAt: BigNumber;
-        totalContributionInWei: BigNumber;
+        remainingPeriodBalanceInWei: BigNumber;
         contributionAmountInWei: BigNumber;
-        prizeForEachWinnerInWei: BigNumber;
+        coordinatorCommissionPercentage: BigNumber;
+        prizePercentage: BigNumber;
       }
     >;
 
@@ -871,8 +875,8 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    proposeNewCoordinatorRewardPercentage(
-      newCoordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+    proposeNewCoordinatorCommissionPercentage(
+      newCoordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -937,7 +941,7 @@ export interface Group extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  approveCoordinatorRewardPercentageProposal(
+  approveCoordinatorCommissionPercentage(
     index: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -980,12 +984,14 @@ export interface Group extends BaseContract {
 
   coordinator(overrides?: CallOverrides): Promise<string>;
 
+  coordinatorCommissionPercentage(
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   coordinatorProposalValues(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
-
-  coordinatorRewardPercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
   drawWinner(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1074,12 +1080,13 @@ export interface Group extends BaseContract {
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
       startedAt: BigNumber;
       endedAt: BigNumber;
-      totalContributionInWei: BigNumber;
+      remainingPeriodBalanceInWei: BigNumber;
       contributionAmountInWei: BigNumber;
-      prizeForEachWinnerInWei: BigNumber;
+      coordinatorCommissionPercentage: BigNumber;
+      prizePercentage: BigNumber;
     }
   >;
 
@@ -1095,8 +1102,8 @@ export interface Group extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  proposeNewCoordinatorRewardPercentage(
-    newCoordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+  proposeNewCoordinatorCommissionPercentage(
+    newCoordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1161,7 +1168,7 @@ export interface Group extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    approveCoordinatorRewardPercentageProposal(
+    approveCoordinatorCommissionPercentage(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1202,12 +1209,14 @@ export interface Group extends BaseContract {
 
     coordinator(overrides?: CallOverrides): Promise<string>;
 
+    coordinatorCommissionPercentage(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     coordinatorProposalValues(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
-
-    coordinatorRewardPercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
     drawWinner(overrides?: CallOverrides): Promise<void>;
 
@@ -1292,12 +1301,13 @@ export interface Group extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
         startedAt: BigNumber;
         endedAt: BigNumber;
-        totalContributionInWei: BigNumber;
+        remainingPeriodBalanceInWei: BigNumber;
         contributionAmountInWei: BigNumber;
-        prizeForEachWinnerInWei: BigNumber;
+        coordinatorCommissionPercentage: BigNumber;
+        prizePercentage: BigNumber;
       }
     >;
 
@@ -1313,8 +1323,8 @@ export interface Group extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    proposeNewCoordinatorRewardPercentage(
-      newCoordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+    proposeNewCoordinatorCommissionPercentage(
+      newCoordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1383,7 +1393,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    approveCoordinatorRewardPercentageProposal(
+    approveCoordinatorCommissionPercentage(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1426,12 +1436,14 @@ export interface Group extends BaseContract {
 
     coordinator(overrides?: CallOverrides): Promise<BigNumber>;
 
+    coordinatorCommissionPercentage(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     coordinatorProposalValues(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    coordinatorRewardPercentage(overrides?: CallOverrides): Promise<BigNumber>;
 
     drawWinner(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1523,8 +1535,8 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    proposeNewCoordinatorRewardPercentage(
-      newCoordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+    proposeNewCoordinatorCommissionPercentage(
+      newCoordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1588,7 +1600,7 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    approveCoordinatorRewardPercentageProposal(
+    approveCoordinatorCommissionPercentage(
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1633,12 +1645,12 @@ export interface Group extends BaseContract {
 
     coordinator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    coordinatorProposalValues(
-      arg0: PromiseOrValue<BigNumberish>,
+    coordinatorCommissionPercentage(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    coordinatorRewardPercentage(
+    coordinatorProposalValues(
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1732,8 +1744,8 @@ export interface Group extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    proposeNewCoordinatorRewardPercentage(
-      newCoordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+    proposeNewCoordinatorCommissionPercentage(
+      newCoordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

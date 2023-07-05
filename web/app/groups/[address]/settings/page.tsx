@@ -19,7 +19,8 @@ async function getGroupSettings(address: string): Promise<GroupSettings> {
       isActiveVoter: tuple[2][2],
       latestPeriodParticipation: tuple[2][3].toNumber()
     },
-    coordinatorRewardPercentage: tuple[3].toNumber(),
+    coordinatorCommissionPercentage:
+      tuple.coordinatorCommissionPercentage.toNumber(),
     contributionAmountInWei: tuple[4].toBigInt(),
     prizePercentage: tuple.prizePercentage.toNumber()
   }));
@@ -104,14 +105,14 @@ export default async function GroupSettingsPage({
           </tr>
           <tr>
             <td className="border-2 border-gray-500 px-4 py-2">
-              Persentase keuntungan koordinator
+              Persentase komisi koordinator
             </td>
             <td className="border-2 border-gray-500 px-4 py-2">
-              {groupSettings.coordinatorRewardPercentage}
+              {groupSettings.coordinatorCommissionPercentage}
             </td>
             <td className="hover:underline border-2 border-gray-500 px-4 py-2">
               <Link
-                href={`/groups/${address}/settings/propose/coordinator-reward-percentage`}
+                href={`/groups/${address}/settings/propose/coordinator-commission-percentage`}
               >
                 Usulkan perubahan
               </Link>
@@ -119,7 +120,7 @@ export default async function GroupSettingsPage({
           </tr>
           <tr>
             <td className="border-2 border-gray-500 px-4 py-2">
-              Jumlah syarat kontribusi
+              Syarat jumlah kontribusi
             </td>
             <td className="border-2 border-gray-500 px-4 py-2">
               {ethers.utils.formatEther(groupSettings.contributionAmountInWei)}{' '}

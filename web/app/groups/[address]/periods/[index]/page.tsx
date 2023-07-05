@@ -51,9 +51,12 @@ async function getPeriodDetail(
       index: index,
       startedAtTimestamp: res.startedAt.toNumber() * 1000,
       endedAtTimestamp: res.endedAt.toNumber() * 1000,
-      totalContributionInWei: res.totalContributionInWei.toBigInt(),
+      remainingPeriodBalanceInWei: res.remainingPeriodBalanceInWei.toBigInt(),
       contributionAmountInWei: res.contributionAmountInWei.toBigInt(),
-      prizeForEachWinnerInWei: res.prizeForEachWinnerInWei.toBigInt(),
+      coordinatorCommissionPercentage:
+        res.coordinatorCommissionPercentage.toNumber(),
+      prizePercentage: res.prizePercentage.toNumber(),
+      // prizeForEachWinnerInWei: res.prizeForEachWinnerInWei.toBigInt(),
       rounds: rounds.map((round) => ({
         drawnAtTimestamp: round.drawnAt.toNumber() * 1000,
         winner: round.winner
@@ -113,13 +116,35 @@ export default async function GroupPeriodDetailPage({
       </p>
       <div className="my-2"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
-        Total Dana : {ethers.utils.formatEther(period.totalContributionInWei)}{' '}
+        Total Dana Sisa :{' '}
+        {ethers.utils.formatEther(period.remainingPeriodBalanceInWei)} BNB
+      </p>
+      <div className="my-2"></div>
+      <p className="text-l md:text-xl font-semibold text-gray-800">
+        Syarat Jumlah Kontribusi :{' '}
+        {ethers.utils.formatEther(period.contributionAmountInWei)} BNB
+      </p>
+      <div className="my-2"></div>
+      <p className="text-l md:text-xl font-semibold text-gray-800">
+        Komisi Koordinator :{' '}
+        {ethers.utils.formatEther(
+          (period.contributionAmountInWei *
+            BigInt(period.rounds[0].contributorCount) *
+            BigInt(period.coordinatorCommissionPercentage)) /
+            BigInt(100)
+        )}{' '}
         BNB
       </p>
       <div className="my-2"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
-        Kontribusi per Orang :{' '}
-        {ethers.utils.formatEther(period.contributionAmountInWei)} BNB
+        Jumlah Hadiah Setiap Pemenang :{' '}
+        {ethers.utils.formatEther(
+          (period.contributionAmountInWei *
+            BigInt(period.rounds[0].contributorCount) *
+            BigInt(period.prizePercentage)) /
+            BigInt(100)
+        )}{' '}
+        BNB
       </p>
       <div className="my-2"></div>
       <p className="text-l md:text-xl font-semibold text-gray-800">
@@ -146,7 +171,7 @@ export default async function GroupPeriodDetailPage({
             <th className="border-2 border-gray-500 px-4 py-2">
               Putaran yang dimenangkan
             </th>
-            <th className="border-2 border-gray-500 px-4 py-2">Hadiah</th>
+            {/* <th className="border-2 border-gray-500 px-4 py-2">Hadiah</th> */}
           </tr>
         </thead>
         <tbody>
@@ -173,10 +198,15 @@ export default async function GroupPeriodDetailPage({
                     }
                     )
                   </td>
-                  <td className="border-2 border-gray-500 px-4 py-2">
-                    {ethers.utils.formatEther(period.prizeForEachWinnerInWei)}{' '}
+                  {/* <td className="border-2 border-gray-500 px-4 py-2">
+                    {ethers.utils.formatEther(
+                      (period.contributionAmountInWei *
+                        BigInt(period.rounds[0].contributorCount) *
+                        BigInt(period.prizePercentage)) /
+                        BigInt(100)
+                    )}{' '}
                     BNB
-                  </td>
+                  </td> */}
                 </tr>
               );
             }
@@ -194,7 +224,7 @@ export default async function GroupPeriodDetailPage({
                 <td className="border-2 border-gray-500 px-4 py-2">
                   Belum menang
                 </td>
-                <td className="border-2 border-gray-500 px-4 py-2">-</td>
+                {/* <td className="border-2 border-gray-500 px-4 py-2">-</td> */}
               </tr>
             );
           })}

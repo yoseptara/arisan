@@ -4,7 +4,7 @@ export interface GroupSettings {
   title: string;
   telegramGroupUrl: string;
   coordinator: Member;
-  coordinatorRewardPercentage: number;
+  coordinatorCommissionPercentage: number;
   contributionAmountInWei: bigint;
   prizePercentage: number;
 }

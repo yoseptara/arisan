@@ -4,9 +4,11 @@ interface Period {
   index: bigint;
   startedAtTimestamp: number;
   endedAtTimestamp: number;
-  totalContributionInWei: bigint;
+  remainingPeriodBalanceInWei: bigint;
   contributionAmountInWei: bigint;
-  prizeForEachWinnerInWei: bigint;
+  coordinatorCommissionPercentage: number;
+  prizePercentage: number;
+  // prizeForEachWinnerInWei: bigint;
   rounds: Round[];
   dueWinners: Member[];
 }

@@ -21,7 +21,7 @@ export default function CreateGroupPage() {
   const [telegramGroupUrl, setTelegramGroupUrl] = useState<string>('');
   const [coordinatorTelegramUsername, seCoordinatorTelegramUsername] =
     useState<string>('');
-  const [coordinatorRewardPercentage, setCoordinatorRewardPercentage] =
+  const [coordinatorCommissionPercentage, setCoordinatorCommissionPercentage] =
     useState<number>(0);
   const [contributionAmountInBNB, setContributionAmountInBNB] =
     useState<number>(0);
@@ -48,7 +48,7 @@ export default function CreateGroupPage() {
       title,
       telegramGroupUrl,
       coordinatorTelegramUsername,
-      coordinatorRewardPercentage,
+      coordinatorCommissionPercentage,
       contributionAmountInBNB,
       prizePercentage
     });
@@ -68,7 +68,7 @@ export default function CreateGroupPage() {
         title,
         telegramGroupUrl,
         coordinatorTelegramUsername,
-        coordinatorRewardPercentage,
+        coordinatorCommissionPercentage,
         ethers.utils.parseEther(contributionAmountInBNB.toString()),
         prizePercentage
       );
@@ -157,21 +157,21 @@ export default function CreateGroupPage() {
         <div className="mb-6">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="coordinatorRewardPercentage"
+            htmlFor="coordinatorCommissionPercentage"
           >
-            Persentase Keuntungan Koordinator
+            Persentase Komisi Koordinator
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            id="coordinatorRewardPercentage"
+            id="coordinatorCommissionPercentage"
             type="number"
             max={100}
             min={0}
             required={true}
             placeholder="Masukkan jumlah persentase yang akan didapatkan koordinator pada setiap periode..."
-            // value={coordinatorRewardPercentage}
+            // value={coordinatorCommissionPercentage}
             onChange={(event) =>
-              setCoordinatorRewardPercentage(parseInt(event.target.value))
+              setCoordinatorCommissionPercentage(parseInt(event.target.value))
             }
           />
         </div>
@@ -180,7 +180,7 @@ export default function CreateGroupPage() {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="contributionAmountInBNB"
           >
-            Jumlah Syarat Kontribusi dalam BNB
+            Syarat Jumlah Kontribusi dalam BNB
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -189,7 +189,7 @@ export default function CreateGroupPage() {
             max={100}
             min={0}
             required={true}
-            placeholder="Masukkan jumlah syarat kontribusi untuk setiap anggota pada periode arisan..."
+            placeholder="Masukkan syarat jumlah kontribusi untuk setiap anggota pada periode arisan..."
             pattern="^\d*([.,])?\d{0,18}$"
             onChange={(event) => {
               const value = event.target.value;

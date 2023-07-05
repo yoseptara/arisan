@@ -182,7 +182,7 @@ const deploy = async () => {
     // let overrides = {
     //   gasLimit: 30000000, // custom gas limit
     // };
-    const deployedGroupFactory = await factory.deploy();
+    const deployedGroupFactory = await factory.deploy({ gasPrice: gasPrice });
     await deployedGroupFactory.deployTransaction.wait();
     // await deployedGroupFactory.deployed();
     // await waitForTransaction(provider, deployedGroupFactory.deployTransaction);

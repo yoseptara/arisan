@@ -104,7 +104,7 @@ export interface ArisanGroupFactory extends BaseContract {
       title: PromiseOrValue<string>,
       telegramGroupUrl: PromiseOrValue<string>,
       coordinatorTelegramUsername: PromiseOrValue<string>,
-      coordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+      coordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
       contributionAmountInWei: PromiseOrValue<BigNumberish>,
       prizePercentage: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -122,7 +122,7 @@ export interface ArisanGroupFactory extends BaseContract {
     title: PromiseOrValue<string>,
     telegramGroupUrl: PromiseOrValue<string>,
     coordinatorTelegramUsername: PromiseOrValue<string>,
-    coordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+    coordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
     contributionAmountInWei: PromiseOrValue<BigNumberish>,
     prizePercentage: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -140,7 +140,7 @@ export interface ArisanGroupFactory extends BaseContract {
       title: PromiseOrValue<string>,
       telegramGroupUrl: PromiseOrValue<string>,
       coordinatorTelegramUsername: PromiseOrValue<string>,
-      coordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+      coordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
       contributionAmountInWei: PromiseOrValue<BigNumberish>,
       prizePercentage: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -161,7 +161,7 @@ export interface ArisanGroupFactory extends BaseContract {
       title: PromiseOrValue<string>,
       telegramGroupUrl: PromiseOrValue<string>,
       coordinatorTelegramUsername: PromiseOrValue<string>,
-      coordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+      coordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
       contributionAmountInWei: PromiseOrValue<BigNumberish>,
       prizePercentage: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -180,7 +180,7 @@ export interface ArisanGroupFactory extends BaseContract {
       title: PromiseOrValue<string>,
       telegramGroupUrl: PromiseOrValue<string>,
       coordinatorTelegramUsername: PromiseOrValue<string>,
-      coordinatorRewardPercentage: PromiseOrValue<BigNumberish>,
+      coordinatorCommissionPercentage: PromiseOrValue<BigNumberish>,
       contributionAmountInWei: PromiseOrValue<BigNumberish>,
       prizePercentage: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }

@@ -63,8 +63,8 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
         return connectedGroupContract.approveNewTelegramGroupProposal(
           proposalIndex
         );
-      case ProposalCategory.coordinatorRewardPercentage:
-        return connectedGroupContract.approveCoordinatorRewardPercentageProposal(
+      case ProposalCategory.coordinatorCommissionPercentage:
+        return connectedGroupContract.approveCoordinatorCommissionPercentage(
           proposalIndex
         );
       case ProposalCategory.contributionAmount:

@@ -13,7 +13,7 @@ import { useWeb3Context } from '@root/contexts';
 import LoadingOverlay from '@root/components/LoadingOverlay';
 import Cookies from 'js-cookie';
 
-export default function CoordinatorRewardPercentageProposalPage({
+export default function CoordinatorCommissionPercentageProposalPage({
   params: { address }
 }: {
   params: { address: string };
@@ -21,7 +21,7 @@ export default function CoordinatorRewardPercentageProposalPage({
   const { web3Provider, address: userWalletAddress } = useWeb3Context();
   const router = useRouter();
 
-  const [coordinatorRewardPercentage, setCoordinatorRewardPercentage] =
+  const [coordinatorCommissionPercentage, setCoordinatorCommissionPercentage] =
     useState<number>(0);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -40,7 +40,7 @@ export default function CoordinatorRewardPercentageProposalPage({
 
     // Do something with the form values, e.g. send to an API or display them
     console.log({
-      coordinatorRewardPercentage
+      coordinatorCommissionPercentage
     });
 
     setIsLoading(true);
@@ -52,8 +52,8 @@ export default function CoordinatorRewardPercentageProposalPage({
         address
       );
       const tx =
-        await connectedGroupContract.proposeNewCoordinatorRewardPercentage(
-          coordinatorRewardPercentage
+        await connectedGroupContract.proposeNewCoordinatorCommissionPercentage(
+          coordinatorCommissionPercentage
         );
 
       await tx.wait();
@@ -81,20 +81,20 @@ export default function CoordinatorRewardPercentageProposalPage({
         <div className="mb-6">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="coordinatorRewardPercentage"
+            htmlFor="coordinatorCommissionPercentage"
           >
-            Persentase Keuntungan Koordinator
+            Persentase Komisi Koordinator
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            id="coordinatorRewardPercentage"
+            id="coordinatorCommissionPercentage"
             type="number"
             max={100}
             min={0}
             required={true}
             placeholder="Masukkan jumlah baru yang diusulkan..."
             onChange={(event) =>
-              setCoordinatorRewardPercentage(parseInt(event.target.value))
+              setCoordinatorCommissionPercentage(parseInt(event.target.value))
             }
           />
         </div>

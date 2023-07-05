@@ -3,7 +3,7 @@ import { Member } from './iMember';
 enum ProposalCategory {
   title = 0,
   telegramGroup = 1,
-  coordinatorRewardPercentage = 2,
+  coordinatorCommissionPercentage = 2,
   contributionAmount = 3,
   prizePercentage = 4,
   newMember = 5,

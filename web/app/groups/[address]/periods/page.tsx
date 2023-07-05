@@ -65,11 +65,15 @@ async function getPageData(
               index: i,
               startedAtTimestamp: period.startedAt.toNumber() * 1000,
               endedAtTimestamp: period.endedAt.toNumber() * 1000,
-              totalContributionInWei: period.totalContributionInWei.toBigInt(),
+              remainingPeriodBalanceInWei:
+                period.remainingPeriodBalanceInWei.toBigInt(),
               contributionAmountInWei:
                 period.contributionAmountInWei.toBigInt(),
-              prizeForEachWinnerInWei:
-                period.prizeForEachWinnerInWei.toBigInt(),
+              coordinatorCommissionPercentage:
+                period.coordinatorCommissionPercentage.toNumber(),
+              prizePercentage: period.prizePercentage.toNumber(),
+              // prizeForEachWinnerInWei:
+              //   period.prizeForEachWinnerInWei.toBigInt(),
               rounds: rounds.map((round) => ({
                 drawnAtTimestamp: round.drawnAt.toNumber() * 1000,
                 winner: {
@@ -149,12 +153,11 @@ export default async function GroupPeriodsPage({
               Total Dana Sisa
             </th>
             <th className="border-2 border-gray-500 px-4 py-2">
-              Jumlah Syarat Kontribusi
+              Syarat Jumlah Kontribusi
             </th>
-
-            <th className="border-2 border-gray-500 px-4 py-2">
+            {/* <th className="border-2 border-gray-500 px-4 py-2">
               Hadiah Setiap Pemenang
-            </th>
+            </th> */}
             <th className="border-2 border-gray-500 px-4 py-2">Aksi</th>
           </tr>
         </thead>
@@ -172,23 +175,24 @@ export default async function GroupPeriodsPage({
                     />
                   }{' '}
                   -{' '}
-                  {period.endedAtTimestamp > 0
-                    ? `${(
-                        <ClientDateLocaleString
-                          timestamp={period.endedAtTimestamp}
-                        />
-                      )}`
-                    : `Belum berakhir`}
+                  {period.endedAtTimestamp > 0 ? (
+                    <ClientDateLocaleString
+                      timestamp={period.endedAtTimestamp}
+                    />
+                  ) : (
+                    `Belum berakhir`
+                  )}
                 </td>
                 <td className="border-2 border-gray-500 px-4 py-2">
-                  {ethers.utils.formatEther(period.totalContributionInWei)} BNB
+                  {ethers.utils.formatEther(period.remainingPeriodBalanceInWei)}{' '}
+                  BNB
                 </td>
                 <td className="border-2 border-gray-500 px-4 py-2">
                   {ethers.utils.formatEther(period.contributionAmountInWei)} BNB
                 </td>
-                <td className="border-2 border-gray-500 px-4 py-2">
+                {/* <td className="border-2 border-gray-500 px-4 py-2">
                   {ethers.utils.formatEther(period.prizeForEachWinnerInWei)} BNB
-                </td>
+                </td> */}
                 <td className="hover:underline border-2 border-gray-500 px-4 py-2">
                   <Link href={`/groups/${address}/periods/${period.index}`}>
                     Lihat Detail
