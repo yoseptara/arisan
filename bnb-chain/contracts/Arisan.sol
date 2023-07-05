@@ -4,6 +4,7 @@ pragma solidity >=0.8.5 <0.9.0;
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract ArisanGroupFactory {
     address[] public groupAddreseses;
@@ -780,7 +781,7 @@ contract Group {
     ) external activeVoterOnly {
         require(
             newContributionAmountInWei > 0,
-            "Jumlah kontribusi tidak boleh 0"
+            "Syarat jumlah kontribusi tidak boleh 0"
         );
         _propose(ProposalCategory.contributionAmount);
 
@@ -809,7 +810,11 @@ contract Group {
         uint limit = 100 - coordinatorCommissionPercentage;
         require(
             newPrizePercentage <= limit && newPrizePercentage >= 0,
-            "Angka persentase hadiah yang diajukan melebihi batas"
+            string.concat(
+                "Jumlah persentase hadiah tidak boleh lebih dari ",
+                Strings.toString(limit),
+                " dan tidak boleh lebih kecil dari 0"
+            )
         );
         _propose(ProposalCategory.prizePercentage);
         uintProposalValues[proposals.length - 1] = newPrizePercentage;
@@ -838,7 +843,11 @@ contract Group {
         require(
             newCoordinatorCommissionPercentage <= limit &&
                 newCoordinatorCommissionPercentage >= 0,
-            "Angka persentase komisi koordinator yang diajukan melebihi batas"
+            string.concat(
+                "Jumlah persentase komisi koordinator tidak boleh lebih dari ",
+                Strings.toString(limit),
+                " dan tidak boleh lebih kecil dari 0"
+            )
         );
         _propose(ProposalCategory.coordinatorCommissionPercentage);
         uintProposalValues[
@@ -919,7 +928,7 @@ contract Group {
             : 0;
         require(
             address(this).balance - lockedBalance >= transferAmount,
-            "Saldo tidak cukup, tunggu sampai saldo cukup untuk melanjutkan voting"
+            "Saldo kelompok tidak cukup"
         );
         _propose(ProposalCategory.transfer);
 
@@ -939,7 +948,7 @@ contract Group {
         require(
             address(this).balance - lockedBalance >=
                 transferProposalValues[index].transferAmount,
-            "Saldo tidak cukup, tunggu sampai saldo cukup untuk melanjutkan voting"
+            "Saldo kelompok tidak cukup, tunggu sampai saldo cukup untuk melanjutkan voting"
         );
 
         require(
