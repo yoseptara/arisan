@@ -116,6 +116,7 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
         await tx.wait();
         showSuccessToast('Proposal berhasil ditolak');
         router.refresh();
+        setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
         const parsedEthersError = getParsedEthersError(err as EthersError);
