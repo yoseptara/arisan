@@ -183,7 +183,6 @@ const ActionTableCell: React.FC<ActionTableCellProps> = ({
       </td>
       <td
         onClick={onReject}
-        f
         className={`hover:underline border-2 border-gray-500 px-4 py-2 ${
           className || ''
         }`}
