@@ -125,13 +125,27 @@ export default async function GroupPeriodsPage({
         <StartPeriodBtn groupAddress={address} />
       </div>
       <div className="my-8"></div>
+      <p className="text-xl md:text-2xl font-semibold text-gray-800">
+        Total Saldo Kelompok : {ethers.utils.formatEther(balance)} BNB
+      </p>
+      <div className="my-4"></div>
       <div className="flex">
-        <p className="text-xl md:text-2xl font-semibold text-gray-800">
-          Total Saldo Kelompok : {ethers.utils.formatEther(balance)} BNB
-        </p>
         {/* {balance.toBigInt() > BigInt(0) && periods.length > 0 ? ( */}
         {true ? (
           <>
+            <p className="text-xl md:text-2xl font-semibold text-gray-800">
+              Total Saldo yang Dapat Dikirim :{' '}
+              {ethers.utils.formatEther(
+                balance.toBigInt() -
+                  periods
+                    .filter((period) => period.endedAtTimestamp == 0)
+                    .reduce(
+                      (prev, cur) => prev + cur.remainingPeriodBalanceInWei,
+                      BigInt(0)
+                    )
+              )}{' '}
+              BNB
+            </p>
             <div className="mx-2" />
 
             <PrimaryLinkBtn
@@ -141,6 +155,7 @@ export default async function GroupPeriodsPage({
           </>
         ) : null}
       </div>
+
       <div className="my-8"></div>
       <table className="table-auto w-full">
         <thead>
